@@ -60,11 +60,10 @@
 
             <Button
                 android:id="@+id/email_sign_in_button"
+                style="register_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_margin_16dp"
-                android:text="@string/action_register"
-                android:textStyle="bold" />
+                android:text="@string/action_register"/>
 
         </LinearLayout>
     </ScrollView>
