@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    style="@style/padding_16dp"
-    tools:context=".LoginActivity">
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".RegisterActivity">
 
     <!-- Login progress -->
     <ProgressBar
@@ -15,18 +17,8 @@
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:layout_marginBottom="8dp"
         android:visibility="gone" />
-
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/tb_login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/popupTheme"
-            app:layout_collapseMode="pin">
-        </android.support.v7.widget.Toolbar>
 
     <ScrollView
         android:id="@+id/login_form"
@@ -66,23 +58,13 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <LinearLayout
+            <Button
+                android:id="@+id/email_sign_in_button"
+                style="register_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal">
+                android:text="@string/action_register"/>
 
-                <Button
-                    android:id="@+id/email_sign_in_button"
-                    style="@style/sign_in_register_button"
-                    android:text="@string/action_sign_in" />
-
-                <Button
-                    android:id="@+id/register"
-                    style="@style/sign_in_register_button"
-                    android:text="@string/action_register"
-                    android:onClick="register"/>
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
