@@ -76,6 +76,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ActionBar actionBar = getActionBar();
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        TextView tv = new TextView(getApplicationContext());
+        tv.setLayoutParams(lp);
+        tv.setText("custom Text");
+        tv.setTextColor(Color.BLACK);
+        tv.setGravity(Gravity.CENTER);
+        if (actionBar != null) {
+            actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+            actionBar.setCustomView(tv);
+        }
+
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         // Set up the login form.
@@ -101,24 +116,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         });
 
 
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        ActionBar actionBar = getActionBar();
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT);
-        TextView tv = new TextView(getApplicationContext());
-        tv.setLayoutParams(lp);
-        tv.setText("custom Text");
-        tv.setTextColor(Color.BLACK);
-        tv.setGravity(Gravity.CENTER);
-        if (actionBar != null) {
-            actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-            actionBar.setCustomView(tv);
-        }
     }
 
     private void populateAutoComplete() {
