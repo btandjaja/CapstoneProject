@@ -93,7 +93,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 //            actionBar.setCustomView(tv);
 //        }
         //TODO custom title bar
-        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_login);
 //        mCustomTitleBar.setText("Custom TItle Test");
 
@@ -126,9 +126,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onResume() {
         super.onResume();
-        final TextView mCustomTitle = findViewById(R.id.tv_title_bar);
-        mCustomTitle.setText("CustomTextView");
-        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_bar);
+//        final TextView mCustomTitle = findViewById(R.id.tv_title_bar);
+//        mCustomTitle.setText("CustomTextView");
+//        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_bar);
     }
 
     private void populateAutoComplete() {
