@@ -27,6 +27,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -72,26 +73,30 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @BindView(R.id.login_form) View mLoginFormView;
     @BindView(R.id.register) Button mRegister;
     @BindView(R.id.tb_login) Toolbar mToolbar;
+//    @BindView(R.id.tv_title_bar) TextView mCustomTitleBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ActionBar actionBar = getActionBar();
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT);
-        TextView tv = new TextView(getApplicationContext());
-        tv.setLayoutParams(lp);
-        tv.setText("custom Text");
-        tv.setTextColor(Color.BLACK);
-        tv.setGravity(Gravity.CENTER);
-        if (actionBar != null) {
-            actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-            actionBar.setCustomView(tv);
-        }
-
+//        ActionBar actionBar = getActionBar();
+//        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+//                RelativeLayout.LayoutParams.MATCH_PARENT,
+//                RelativeLayout.LayoutParams.WRAP_CONTENT);
+//        TextView tv = new TextView(getApplicationContext());
+//        tv.setLayoutParams(lp);
+//        tv.setText("custom Text");
+//        tv.setTextColor(Color.BLACK);
+//        tv.setGravity(Gravity.CENTER);
+//        if (actionBar != null) {
+//            actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+//            actionBar.setCustomView(tv);
+//        }
+        //TODO custom title bar
+        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.activity_login);
+//        mCustomTitleBar.setText("Custom TItle Test");
+
         ButterKnife.bind(this);
         // Set up the login form.
         populateAutoComplete();
@@ -116,6 +121,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         });
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        final TextView mCustomTitle = findViewById(R.id.tv_title_bar);
+        mCustomTitle.setText("CustomTextView");
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_bar);
     }
 
     private void populateAutoComplete() {
