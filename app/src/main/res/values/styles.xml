@@ -33,7 +33,6 @@
     </style>
 
     <style name="popupTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="windowActionBar">false</item>
     </style>>
 
     <!-- activity_register -->

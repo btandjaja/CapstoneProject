@@ -29,14 +29,14 @@
             android:id="@+id/tb_login"
             style="@style/popupTheme"
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
+            android:layout_height="wrap_content"
             app:layout_collapseMode="pin">
 
             <com.buntorotandjaja.www.capstoneproject.ThreeTwoImageView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:contentDescription="@string/app_name"
-                android:layout_gravity="center"
+                android:layout_gravity="center_vertical|center_horizontal"
                 android:scaleType="centerCrop"
                 android:src="@drawable/garage_sale_logo_1" />
         </android.support.v7.widget.Toolbar>
