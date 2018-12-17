@@ -5,10 +5,8 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -23,18 +21,14 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,29 +67,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @BindView(R.id.login_form) View mLoginFormView;
     @BindView(R.id.register) Button mRegister;
     @BindView(R.id.tb_login) Toolbar mToolbar;
-//    @BindView(R.id.tv_title_bar) TextView mCustomTitleBar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        ActionBar actionBar = getActionBar();
-//        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-//                RelativeLayout.LayoutParams.MATCH_PARENT,
-//                RelativeLayout.LayoutParams.WRAP_CONTENT);
-//        TextView tv = new TextView(getApplicationContext());
-//        tv.setLayoutParams(lp);
-//        tv.setText("custom Text");
-//        tv.setTextColor(Color.BLACK);
-//        tv.setGravity(Gravity.CENTER);
-//        if (actionBar != null) {
-//            actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-//            actionBar.setCustomView(tv);
-//        }
-        //TODO custom title bar
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_login);
-//        mCustomTitleBar.setText("Custom TItle Test");
 
         ButterKnife.bind(this);
         // Set up the login form.

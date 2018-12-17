@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    style="@style/padding_16dp"
     tools:context=".LoginActivity">
+
 
     <!-- Login progress -->
     <ProgressBar
@@ -19,19 +20,34 @@
         android:layout_marginBottom="8dp"
         android:visibility="gone" />
 
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/tb_login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             style="@style/popupTheme"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
             app:layout_collapseMode="pin">
+
+            <com.buntorotandjaja.www.capstoneproject.ThreeTwoImageView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:contentDescription="@string/app_name"
+                android:layout_gravity="center"
+                android:scaleType="centerCrop"
+                android:src="@drawable/garage_sale_logo_1" />
         </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
 
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:id="@+id/email_login_form"
@@ -80,9 +96,9 @@
                 <Button
                     android:id="@+id/register"
                     style="@style/sign_in_register_button"
-                    android:text="@string/action_register"
-                    android:onClick="register"/>
+                    android:onClick="register"
+                    android:text="@string/action_register" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>
