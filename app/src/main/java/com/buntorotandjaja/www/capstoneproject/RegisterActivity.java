@@ -1,11 +1,15 @@
 package com.buntorotandjaja.www.capstoneproject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -32,6 +36,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
@@ -56,21 +63,25 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
      */
     private UserLoginTask mAuthTask = null;
 
+    private final int PASSWORD_MIN = 8, PASSWORD_MAX = 16;
+
     // UI references.
-    private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
+    @BindView(R.id.email) AutoCompleteTextView mEmailView;
+    @BindView(R.id.password) EditText mPasswordView;
+    @BindView(R.id.password_confirm) EditText mPasswordConfirmView;
+    @BindView(R.id.login_progress) View mProgressView;
+    @BindView(R.id.login_form) View mLoginFormView;
+    @BindView(R.id.email_register_button) Button mEmailRegisterButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        ButterKnife.bind(this);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
 
-        mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -82,16 +93,18 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+
+        mEmailRegisterButton.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 attemptLogin();
             }
         });
 
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     private void populateAutoComplete() {
@@ -155,6 +168,8 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
+        //TODO read in retyped password
+        String passwordConfirm = mPasswordConfirmView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -163,6 +178,10 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
+            cancel = true;
+        } else if (!TextUtils.isEmpty(passwordConfirm) && !isPasswordValid(passwordConfirm)) {
+            mPasswordConfirmView.setError(getString(R.string.error_invalid_password));
+            focusView = mPasswordConfirmView;
             cancel = true;
         }
 
@@ -196,8 +215,38 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
+        //TODO password logic
+        // only allow alphabet and unique characters (#,$,%,&)
+        boolean oneCapitalLetter = false;
+        for (int i = 0; i < password.length(); i++) {
+            if (!Character.isLetterOrDigit(password.charAt(i))) {
+                if (!uniqueChar(password.charAt(i))) {
+                    return false;
+                }
+            } else if (password.charAt(i) >= 'A' || password.charAt(i) <= 'Z') {
+                oneCapitalLetter = true;
+            }
+        }
+        // must be between 8 - 16 characters
+        boolean passwordLengthMinRequirement = password.length() >= PASSWORD_MIN;
+        boolean passwordLengthMaxRequirement = password.length() <= PASSWORD_MAX;
+
+        return oneCapitalLetter && passwordLengthMaxRequirement && passwordLengthMinRequirement;
+    }
+
+    private boolean uniqueChar(char c) {
+        //TODO check if it contains "#$%&"
+        switch(c) {
+            case '$':
+                return true;
+            case '#':
+                return true;
+            case '&':
+                return true;
+            case '%':
+                return true;
+        }
+        return false;
     }
 
     /**

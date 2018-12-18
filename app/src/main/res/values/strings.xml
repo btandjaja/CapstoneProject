@@ -14,4 +14,7 @@
     </string>
     <string name="action_register">Register</string>
     <string name="title_activity_register">Register</string>
+
+    <string name="retype_password">Retype Password</string>
+    <string name="password_length">Password length 8 - 16</string>
 </resources>

@@ -18,18 +18,26 @@
         android:visibility="gone" />
 
     <android.support.design.widget.AppBarLayout
+        style="@style/AppTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:theme="@style/AppTheme">
+
+        <!--<android.support.v7.widget.Toolbar-->
+            <!--android:id="@+id/tb_login"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_horizontal|center_vertical">-->
+        <!--</android.support.v7.widget.Toolbar>-->
 
         <com.buntorotandjaja.www.capstoneproject.ThreeTwoImageView
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_gravity="center_vertical|center_horizontal"
             android:contentDescription="@string/app_name"
             android:scaleType="centerCrop"
             android:src="@drawable/garage_sale_logo_1" />
-
     </android.support.design.widget.AppBarLayout>
 
     <ScrollView
