@@ -84,7 +84,7 @@
                     style="@style/editText_autoComplete"
                     android:hint="@string/retype_password"
                     android:imeActionId="6"
-                    android:imeActionLable="@string/action_sign_in_short"
+                    android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"/>
 
