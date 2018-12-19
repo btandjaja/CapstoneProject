@@ -29,8 +29,8 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-//import androidx.appcompat.widget.Toolbar;
-import android.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
+//import android.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,7 +109,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
 
     private void setupActionBar() {
 
-        this.setActionBar((Toolbar)findViewById(R.id.tb_register));
+        setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setTitle("Some Title");
