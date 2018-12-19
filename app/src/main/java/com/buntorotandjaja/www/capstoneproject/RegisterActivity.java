@@ -32,6 +32,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,15 +73,14 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     @BindView(R.id.login_progress) View mProgressView;
     @BindView(R.id.login_form) View mLoginFormView;
     @BindView(R.id.email_register_button) Button mEmailRegisterButton;
+    @BindView(R.id.tb_register) Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        setupActionBar();
         // Set up the login form.
         populateAutoComplete();
 
@@ -107,6 +107,14 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         if (actionBar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    private void setupActionBar() {
+
+        setActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setTitle("Some Title");
     }
 
     private void populateAutoComplete() {
