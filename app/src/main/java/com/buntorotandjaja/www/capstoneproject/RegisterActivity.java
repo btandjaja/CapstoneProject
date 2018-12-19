@@ -1,16 +1,13 @@
 package com.buntorotandjaja.www.capstoneproject;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
 import android.content.CursorLoader;
@@ -32,6 +29,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+//import androidx.appcompat.widget.Toolbar;
 import android.widget.Toolbar;
 
 import java.util.ArrayList;
@@ -111,7 +109,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
 
     private void setupActionBar() {
 
-        setActionBar(mToolbar);
+        this.setActionBar((Toolbar)findViewById(R.id.tb_register));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setTitle("Some Title");
