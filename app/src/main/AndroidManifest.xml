@@ -25,8 +25,7 @@
         </activity>
         <activity
             android:parentActivityName=".LoginActivity"
-            android:name=".RegisterActivity"
-            android:label="@string/title_activity_register"></activity>
+            android:name=".RegisterActivity" />
     </application>
 
 </manifest>

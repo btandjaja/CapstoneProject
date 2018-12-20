@@ -17,4 +17,5 @@
 
     <string name="retype_password">Retype Password</string>
     <string name="password_length">Password length 8 - 16</string>
+    <string name="create_account">Create Account</string>
 </resources>

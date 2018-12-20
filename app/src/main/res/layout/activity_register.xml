@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
     android:layout_height="match_parent">
 
     <!-- Login progress -->
@@ -25,6 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             android:layout_gravity="center_vertical|center_horizontal"
+            style="@style/ThemeOverlay.AppCompat.Light"
             android:layout_marginStart="0dp"
             android:layout_marginEnd="0dp"
             app:layout_collapseMode="pin">
@@ -33,14 +35,15 @@
                 style="@style/TextAppearance.AppCompat.Headline"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/action_register" />
+                android:text="@string/create_account"/>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
     <ScrollView
         android:id="@+id/login_form"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent" >
 
         <LinearLayout
             android:id="@+id/email_login_form"

@@ -23,6 +23,7 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -76,6 +77,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
         setupActionBar();
@@ -108,11 +110,11 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     }
 
     private void setupActionBar() {
-
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setTitle("Some Title");
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.chevron_left_white_24dp);
+//        getSupportActionBar().setTitle(R.string.create_account);
     }
 
     private void populateAutoComplete() {
