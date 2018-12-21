@@ -77,9 +77,12 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        // TODO remove statusBar before setContentView
+        removeStatusBar();
         setContentView(R.layout.activity_register);
+        // TODO Butterknife
         ButterKnife.bind(this);
+        // TODO setup actionBar with current toolbar
         setupActionBar();
         // Set up the login form.
         populateAutoComplete();
@@ -109,12 +112,15 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         }
     }
 
+    private void removeStatusBar() {
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
+
     private void setupActionBar() {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.chevron_left_white_24dp);
-//        getSupportActionBar().setTitle(R.string.create_account);
     }
 
     private void populateAutoComplete() {
@@ -178,7 +184,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
-        //TODO read in retyped password
+        // TODO read in retyped password
         String passwordConfirm = mPasswordConfirmView.getText().toString();
 
         boolean cancel = false;
@@ -191,6 +197,10 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             cancel = true;
         } else if (!TextUtils.isEmpty(passwordConfirm) && !isPasswordValid(passwordConfirm)) {
             mPasswordConfirmView.setError(getString(R.string.error_invalid_password));
+            focusView = mPasswordConfirmView;
+            cancel = true;
+        } else if (!password.equals(passwordConfirm)) {
+            mPasswordConfirmView.setError(getString(R.string.error_nonmatch_password));
             focusView = mPasswordConfirmView;
             cancel = true;
         }
@@ -226,7 +236,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
 
     private boolean isPasswordValid(String password) {
         //TODO password logic
-        // only allow alphabet and unique characters (#,$,%,&)
+        // only allow alphabet, unique characters (#,$,%,&), and one capitalize letter
         boolean oneCapitalLetter = false;
         for (int i = 0; i < password.length(); i++) {
             if (!Character.isLetterOrDigit(password.charAt(i))) {

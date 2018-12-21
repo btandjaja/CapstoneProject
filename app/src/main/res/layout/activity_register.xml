@@ -24,8 +24,7 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/tb_register"
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_height="wrap_content"
             style="@style/ThemeOverlay.AppCompat.Light"
             android:layout_marginStart="0dp"
             android:layout_marginEnd="0dp"
@@ -43,7 +42,10 @@
         android:id="@+id/login_form"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="@dimen/activity_margin_16dp"
+        android:layout_marginEnd="@dimen/activity_margin_16dp">
 
         <LinearLayout
             android:id="@+id/email_login_form"

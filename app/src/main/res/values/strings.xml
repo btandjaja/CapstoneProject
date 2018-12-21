@@ -9,6 +9,7 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
+    <string name="error_nonmatch_password">Password does not match!</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
@@ -16,6 +17,8 @@
     <string name="title_activity_register">Register</string>
 
     <string name="retype_password">Retype Password</string>
-    <string name="password_length">Password length 8 - 16</string>
+    <string name="password_length">Password length must be 8 - 16 with unique char #,$,%,&amp;
+        and at least one capitalize letter</string>
     <string name="create_account">Create Account</string>
+
 </resources>
