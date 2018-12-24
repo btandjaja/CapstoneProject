@@ -21,4 +21,6 @@
         and at least one capitalize letter</string>
     <string name="create_account">Create Account</string>
 
+    <string name="unique_id">USER_SPECIFIC_ID</string>
+
 </resources>

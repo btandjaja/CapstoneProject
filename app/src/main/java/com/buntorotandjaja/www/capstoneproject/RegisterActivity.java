@@ -5,7 +5,14 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.pm.PackageManager;
 import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
@@ -20,6 +27,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
+import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,8 +39,9 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.widget.Toolbar;
-//import android.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +84,9 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     @BindView(R.id.email_register_button) Button mEmailRegisterButton;
     @BindView(R.id.tb_register) Toolbar mToolbar;
 
+    // Firebase Authentication
+    private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +97,8 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         ButterKnife.bind(this);
         // TODO setup actionBar with current toolbar
         setupActionBar();
+        // FirebaseAuth instance
+        initializeFirebaseAuth();
         // Set up the login form.
         populateAutoComplete();
 
@@ -121,6 +136,10 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.chevron_left_white_24dp);
+    }
+
+    private void initializeFirebaseAuth() {
+        mAuth = FirebaseAuth.getInstance();
     }
 
     private void populateAutoComplete() {
@@ -173,7 +192,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        if (mAuthTask != null) {
+        if (mAuth != null) {
             return;
         }
 
@@ -224,14 +243,31 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            
+            mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // sign in success, update UI with the signed-in user's information
+                                Log.d(this.getClass().getSimpleName(), "createUserWithEmail:success");
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                Bundle bundle = new Bundle();
+                                bundle.putString(user.getUid(), getString(R.string.unique_id));
+                                // TODO clear intent stack
+                                // TODO put bundle in intent and start activity
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Toast.makeText(RegisterActivity.this, "Authentication fail.", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
         }
     }
 
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
-        return email.contains("@");
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     private boolean isPasswordValid(String password) {

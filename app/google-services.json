@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:505895129869:android:3a7180b2a7f0b7e4",
         "android_client_info": {
-          "package_name": "com.buntorotandjaja.www.capstoneproject"
+          "package_name": "com.buntorotandjaja.www"
         }
       },
       "oauth_client": [
@@ -31,6 +31,50 @@
         "appinvite_service": {
           "status": 1,
           "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:505895129869:android:dc2ad555cb3d0099",
+        "android_client_info": {
+          "package_name": "com.buntorotandjaja.www.capstoneproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "505895129869-jigr56ug6rqm87f7b471krbkfnk1iuqc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.buntorotandjaja.www.capstoneproject",
+            "certificate_hash": "57d88186fa339f2fe85e71524108bf5afad3a1a5"
+          }
+        },
+        {
+          "client_id": "505895129869-rcbvs8lehnfgq3lc8va17i400h6dcah1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBF5W-GEOy9AvHCe0WKoDoD7qbpSxLIBbA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "505895129869-rcbvs8lehnfgq3lc8va17i400h6dcah1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2
