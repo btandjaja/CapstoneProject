@@ -227,7 +227,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             mEmailView.requestFocus();
             return;
         }
-// TODO check up to this point
+        
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
