@@ -24,8 +24,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:parentActivityName=".LoginActivity"
-            android:name=".RegisterActivity" />
+            android:name=".RegisterActivity"
+            android:parentActivityName=".LoginActivity" />
+        <activity android:name=".ItemListActivity"></activity>
     </application>
 
 </manifest>

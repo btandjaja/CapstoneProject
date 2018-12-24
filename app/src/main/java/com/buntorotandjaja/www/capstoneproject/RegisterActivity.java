@@ -3,6 +3,7 @@ package com.buntorotandjaja.www.capstoneproject;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import androidx.annotation.NonNull;
 
@@ -243,7 +244,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            
+
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
@@ -254,6 +255,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 Bundle bundle = new Bundle();
                                 bundle.putString(user.getUid(), getString(R.string.unique_id));
+                                Intent intent = new Intent(this, )
                                 // TODO clear intent stack
                                 // TODO put bundle in intent and start activity
                             } else {
