@@ -13,6 +13,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 
 import androidx.appcompat.app.ActionBar;
@@ -251,24 +252,31 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                             Log.d(this.getClass().getSimpleName(), "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             Intent intent = new Intent(RegisterActivity.this, ItemListActivity.class);
+                            // TODO clear top activity stack
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             intent.putExtra(user.getUid(), getString(R.string.unique_id));
-                            // TODO clear activity stack
                             startActivity(intent);
                         } else {
+                            // TODO collusion exception
+                            if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                                Toast.makeText(RegisterActivity.this, "Email is registered.", Toast.LENGTH_LONG).show();
+                                return;
+                            }
                             // If sign in fails, display a message to the user.
-                            Toast.makeText(RegisterActivity.this, "Registration fail. Please try again.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(RegisterActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+//                            Toast.makeText(RegisterActivity.this, "Registration fail. Please try again.", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
+        // TODO only logic I can find and understood (Dec 2018)
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO password logic
+        // TODO custom password logic
         // only allow alphabet, unique characters (#,$,%,&), and one capitalize letter
         boolean oneCapitalLetter = false;
         boolean oneUnique = false;
