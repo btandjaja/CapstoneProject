@@ -20,6 +20,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -59,6 +60,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
+
+    private final int PASSWORD_MIN = 8, PASSWORD_MAX = 16;
 
     // UI references.
     @BindView(R.id.email) AutoCompleteTextView mEmailView;
@@ -203,14 +206,47 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask.execute((Void) null);
         }
     }
+
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
+        // TODO only logic I can find and understood (Dec 2018)
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 8;
+        // TODO custom password logic
+        // only allow alphabet, unique characters (#,$,%,&), and one capitalize letter
+        boolean oneCapitalLetter = false;
+        boolean oneUnique = false;
+        for (int i = 0; i < password.length(); i++) {
+            if (!Character.isLetterOrDigit(password.charAt(i))) {
+                if (!uniqueChar(password.charAt(i))) {
+                    return false;
+                }
+                oneUnique = true;
+            } else if (password.charAt(i) >= 'A' && password.charAt(i) <= 'Z') {
+                oneCapitalLetter = true;
+            }
+        }
+
+        // must be between 8 - 16 characters
+        boolean passwordLengthRequirement = password.length() >= PASSWORD_MIN && password.length() <= PASSWORD_MAX;
+
+        return oneCapitalLetter && oneUnique && passwordLengthRequirement;
+    }
+
+    private boolean uniqueChar(char c) {
+        //TODO check if it contains "#$%&"
+        switch (c) {
+            case '$':
+                return true;
+            case '#':
+                return true;
+            case '&':
+                return true;
+            case '%':
+                return true;
+        }
+        return false;
     }
 
     /**
