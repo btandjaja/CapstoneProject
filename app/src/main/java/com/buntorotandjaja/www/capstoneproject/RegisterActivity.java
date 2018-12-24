@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -16,6 +17,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.app.LoaderManager.LoaderCallbacks;
 
 import android.content.CursorLoader;
@@ -77,13 +79,20 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     private final int PASSWORD_MIN = 8, PASSWORD_MAX = 16;
 
     // UI references.
-    @BindView(R.id.email) AutoCompleteTextView mEmailView;
-    @BindView(R.id.password) EditText mPasswordView;
-    @BindView(R.id.password_confirm) EditText mPasswordConfirmView;
-    @BindView(R.id.login_progress) View mProgressView;
-    @BindView(R.id.login_form) View mLoginFormView;
-    @BindView(R.id.email_register_button) Button mEmailRegisterButton;
-    @BindView(R.id.tb_register) Toolbar mToolbar;
+    @BindView(R.id.email)
+    AutoCompleteTextView mEmailView;
+    @BindView(R.id.password)
+    EditText mPasswordView;
+    @BindView(R.id.password_confirm)
+    EditText mPasswordConfirmView;
+    @BindView(R.id.login_progress)
+    View mProgressView;
+    @BindView(R.id.login_form)
+    View mLoginFormView;
+    @BindView(R.id.email_register_button)
+    Button mEmailRegisterButton;
+    @BindView(R.id.tb_register)
+    Toolbar mToolbar;
 
     // Firebase Authentication
     private FirebaseAuth mAuth;
@@ -213,58 +222,48 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
+            mPasswordView.requestFocus();
+            return;
         } else if (!TextUtils.isEmpty(passwordConfirm) && !isPasswordValid(passwordConfirm)) {
             mPasswordConfirmView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordConfirmView;
-            cancel = true;
+            mPasswordConfirmView.requestFocus();
+            return;
         } else if (!password.equals(passwordConfirm)) {
             mPasswordConfirmView.setError(getString(R.string.error_nonmatch_password));
-            focusView = mPasswordConfirmView;
-            cancel = true;
+            mPasswordConfirmView.requestFocus();
+            return;
         }
 
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
             mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
+            mEmailView.requestFocus();
+            return;
         } else if (!isEmailValid(email)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
-            cancel = true;
+            mEmailView.requestFocus();
+            return;
         }
 
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
-
-            mAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                // sign in success, update UI with the signed-in user's information
-                                Log.d(this.getClass().getSimpleName(), "createUserWithEmail:success");
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                Bundle bundle = new Bundle();
-                                bundle.putString(user.getUid(), getString(R.string.unique_id));
-                                Intent intent = new Intent(this, )
-                                // TODO clear intent stack
-                                // TODO put bundle in intent and start activity
-                            } else {
-                                // If sign in fails, display a message to the user.
-                                Toast.makeText(RegisterActivity.this, "Authentication fail.", Toast.LENGTH_LONG).show();
-                            }
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // sign in success, update UI with the signed-in user's information
+                            Log.d(this.getClass().getSimpleName(), "createUserWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            Intent intent = new Intent(RegisterActivity.this, ItemListActivity.class);
+                            intent.putExtra(user.getUid(), getString(R.string.unique_id));
+                            // TODO clear activity stack
+                            startActivity(intent);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Toast.makeText(RegisterActivity.this, "Authentication fail.", Toast.LENGTH_LONG).show();
                         }
-                    });
-        }
+                    }
+                });
+
     }
 
     private boolean isEmailValid(String email) {
@@ -294,7 +293,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
 
     private boolean uniqueChar(char c) {
         //TODO check if it contains "#$%&"
-        switch(c) {
+        switch (c) {
             case '$':
                 return true;
             case '#':
