@@ -202,7 +202,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        if (mAuth != null) {
+        if (mAuth == null) {
             return;
         }
 
@@ -216,11 +216,6 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         // TODO read in retyped password
         String passwordConfirm = mPasswordConfirmView.getText().toString();
 
-        // TODO remove
-//        boolean cancel = false;
-//        View focusView = null;
-        Toast.makeText(RegisterActivity.this, "in attempt Login", Toast.LENGTH_LONG).show();
-
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
             mEmailView.setError(getString(R.string.error_field_required));
@@ -231,7 +226,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             mEmailView.requestFocus();
             return;
         }
-
+// TODO check up to this point
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
@@ -276,20 +271,22 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         //TODO password logic
         // only allow alphabet, unique characters (#,$,%,&), and one capitalize letter
         boolean oneCapitalLetter = false;
+        boolean oneUnique = false;
         for (int i = 0; i < password.length(); i++) {
             if (!Character.isLetterOrDigit(password.charAt(i))) {
                 if (!uniqueChar(password.charAt(i))) {
                     return false;
                 }
-            } else if (password.charAt(i) >= 'A' || password.charAt(i) <= 'Z') {
+                oneUnique = true;
+            } else if (password.charAt(i) >= 'A' && password.charAt(i) <= 'Z') {
                 oneCapitalLetter = true;
             }
         }
-        // must be between 8 - 16 characters
-        boolean passwordLengthMinRequirement = password.length() >= PASSWORD_MIN;
-        boolean passwordLengthMaxRequirement = password.length() <= PASSWORD_MAX;
 
-        return oneCapitalLetter && passwordLengthMaxRequirement && passwordLengthMinRequirement;
+        // must be between 8 - 16 characters
+        boolean passwordLengthRequirement = password.length() >= PASSWORD_MIN && password.length() <= PASSWORD_MAX;
+
+        return oneCapitalLetter && oneUnique && passwordLengthRequirement;
     }
 
     private boolean uniqueChar(char c) {
