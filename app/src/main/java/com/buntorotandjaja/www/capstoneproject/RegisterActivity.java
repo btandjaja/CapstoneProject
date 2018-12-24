@@ -216,8 +216,21 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         // TODO read in retyped password
         String passwordConfirm = mPasswordConfirmView.getText().toString();
 
-        boolean cancel = false;
-        View focusView = null;
+        // TODO remove
+//        boolean cancel = false;
+//        View focusView = null;
+        Toast.makeText(RegisterActivity.this, "in attempt Login", Toast.LENGTH_LONG).show();
+
+        // Check for a valid email address.
+        if (TextUtils.isEmpty(email)) {
+            mEmailView.setError(getString(R.string.error_field_required));
+            mEmailView.requestFocus();
+            return;
+        } else if (!isEmailValid(email)) {
+            mEmailView.setError(getString(R.string.error_invalid_email));
+            mEmailView.requestFocus();
+            return;
+        }
 
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
@@ -231,17 +244,6 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         } else if (!password.equals(passwordConfirm)) {
             mPasswordConfirmView.setError(getString(R.string.error_nonmatch_password));
             mPasswordConfirmView.requestFocus();
-            return;
-        }
-
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            mEmailView.requestFocus();
-            return;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            mEmailView.requestFocus();
             return;
         }
 
@@ -259,11 +261,10 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                             startActivity(intent);
                         } else {
                             // If sign in fails, display a message to the user.
-                            Toast.makeText(RegisterActivity.this, "Authentication fail.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(RegisterActivity.this, "Registration fail. Please try again.", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
-
     }
 
     private boolean isEmailValid(String email) {
