@@ -264,7 +264,6 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                             }
                             // If sign in fails, display a message to the user.
                             Toast.makeText(RegisterActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
-//                            Toast.makeText(RegisterActivity.this, "Registration fail. Please try again.", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
