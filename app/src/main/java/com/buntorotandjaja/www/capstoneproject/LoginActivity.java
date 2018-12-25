@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import androidx.annotation.NonNull;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -61,7 +63,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private UserLoginTask mAuthTask = null;
 
+    // password min and max length
     private final int PASSWORD_MIN = 8, PASSWORD_MAX = 16;
+
+    // Firebase Authentication
+    private FirebaseAuth mAuth;
 
     // UI references.
     @BindView(R.id.email) AutoCompleteTextView mEmailView;

@@ -21,20 +21,12 @@
         style="@style/AppTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:theme="@style/AppTheme">
-
-        <!--<android.support.v7.widget.Toolbar-->
-            <!--android:id="@+id/tb_login"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center_horizontal|center_vertical">-->
-        <!--</android.support.v7.widget.Toolbar>-->
+        android:fitsSystemWindows="true"
+        app:theme="@style/AppRegister">
 
         <com.buntorotandjaja.www.capstoneproject.ThreeTwoImageView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_gravity="center_vertical|center_horizontal"
             android:contentDescription="@string/app_name"
             android:scaleType="centerCrop"
             android:src="@drawable/garage_sale_logo_1" />
@@ -44,6 +36,9 @@
         android:id="@+id/login_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/activity_margin_16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="@dimen/activity_margin_16dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
