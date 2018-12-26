@@ -55,6 +55,8 @@ public class LoginActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        clearLoginForm();
+
         // FirebaseAuth instance
         initializeFirebaseAuth();
 
@@ -75,14 +77,16 @@ public class LoginActivity extends AppCompatActivity {
                 attemptLogin();
             }
         });
+    }
 
-
+    private void clearLoginForm() {
+        mEmailView.setText("");
+        mPasswordView.setText("");
     }
 
     private void initializeFirebaseAuth() {
         mAuth = FirebaseAuth.getInstance();
     }
-
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -123,9 +127,9 @@ public class LoginActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             Intent intent = new Intent(LoginActivity.this, ItemListActivity.class);
                             // TODO clear top activity stack
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                             intent.putExtra(getString(R.string.unique_id), user.getUid());
-                            Toast.makeText(LoginActivity.this, user.getUid(), Toast.LENGTH_LONG).show();
                             startActivity(intent);
                         } else {
                             // show error
@@ -182,4 +186,3 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 }
-

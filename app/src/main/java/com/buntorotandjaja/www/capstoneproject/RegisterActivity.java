@@ -72,7 +72,7 @@ public class RegisterActivity extends AppCompatActivity {
                 return false;
             }
         });
-        
+
         mEmailRegisterButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -157,17 +157,16 @@ public class RegisterActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             Intent intent = new Intent(RegisterActivity.this, ItemListActivity.class);
                             // TODO clear top activity stack
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                             intent.putExtra(user.getUid(), getString(R.string.unique_id));
                             startActivity(intent);
                         } else {
                             // TODO collusion exception
                             if (task.getException() instanceof FirebaseAuthUserCollisionException) {
-                                Toast.makeText(RegisterActivity.this, "Email is registered.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(RegisterActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                 return;
                             }
-                            // If sign in fails, display a message to the user.
-                            Toast.makeText(RegisterActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }
                 });
