@@ -1,6 +1,7 @@
 package com.buntorotandjaja.www.capstoneproject;
 
 import android.content.Intent;
+
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,12 +40,18 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     // UI references.
-    @BindView(R.id.email) AutoCompleteTextView mEmailView;
-    @BindView(R.id.password) EditText mPasswordView;
-    @BindView(R.id.login_progress) View mProgressView;
-    @BindView(R.id.login_form) View mLoginFormView;
-    @BindView(R.id.register) Button mRegister;
-    @BindView(R.id.email_sign_in_button) Button mEmailSignInButton;
+    @BindView(R.id.email)
+    AutoCompleteTextView mEmailView;
+    @BindView(R.id.password)
+    EditText mPasswordView;
+    @BindView(R.id.login_progress)
+    View mProgressView;
+    @BindView(R.id.login_form)
+    View mLoginFormView;
+    @BindView(R.id.register)
+    Button mRegister;
+    @BindView(R.id.email_sign_in_button)
+    Button mEmailSignInButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,10 +134,12 @@ public class LoginActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             Intent intent = new Intent(LoginActivity.this, ItemListActivity.class);
                             // TODO clear top activity stack
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                             intent.putExtra(getString(R.string.unique_id), user.getUid());
                             startActivity(intent);
+                            // TODO alternative solution from pressing back
+//                            finish();
                         } else {
                             // show error
                             Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -142,28 +151,6 @@ public class LoginActivity extends AppCompatActivity {
     private boolean isEmailValid(String email) {
         // TODO only logic I can find and understood (Dec 2018)
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
-
-    private boolean isPasswordValid(String password) {
-        // TODO custom password logic
-        // only allow alphabet, unique characters (#,$,%,&), and one capitalize letter
-        boolean oneCapitalLetter = false;
-        boolean oneUnique = false;
-        for (int i = 0; i < password.length(); i++) {
-            if (!Character.isLetterOrDigit(password.charAt(i))) {
-                if (!uniqueChar(password.charAt(i))) {
-                    return false;
-                }
-                oneUnique = true;
-            } else if (password.charAt(i) >= 'A' && password.charAt(i) <= 'Z') {
-                oneCapitalLetter = true;
-            }
-        }
-
-        // must be between 8 - 16 characters
-        boolean passwordLengthRequirement = password.length() >= PASSWORD_MIN && password.length() <= PASSWORD_MAX;
-
-        return oneCapitalLetter && oneUnique && passwordLengthRequirement;
     }
 
     private boolean uniqueChar(char c) {
@@ -184,5 +171,20 @@ public class LoginActivity extends AppCompatActivity {
     public void register(View view) {
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            clearLoginForm();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onBackPressed() {
+        clearLoginForm();
+        super.onBackPressed();
     }
 }
