@@ -55,8 +55,7 @@
                     android:id="@+id/email"
                     style="@style/editText_autoComplete"
                     android:hint="@string/prompt_email"
-                    android:inputType="textEmailAddress"
-                    android:autofillHints="@string/username_hint"/>
+                    android:inputType="textEmailAddress" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -71,7 +70,6 @@
                     android:imeActionId="6"
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified"
-                    android:autofillHints="@string/password"
                     android:inputType="textPassword" />
 
             </com.google.android.material.textfield.TextInputLayout>

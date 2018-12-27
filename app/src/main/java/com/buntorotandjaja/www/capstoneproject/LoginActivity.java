@@ -1,5 +1,6 @@
 package com.buntorotandjaja.www.capstoneproject;
 
+import android.content.Context;
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,31 +35,23 @@ import butterknife.ButterKnife;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity {
-    // password min and max length
-    private final int PASSWORD_MIN = 8, PASSWORD_MAX = 16;
-
     // Firebase Authentication
     private FirebaseAuth mAuth;
 
     // UI references.
-    @BindView(R.id.email)
-    AutoCompleteTextView mEmailView;
-    @BindView(R.id.password)
-    EditText mPasswordView;
-    @BindView(R.id.login_progress)
-    View mProgressView;
-    @BindView(R.id.login_form)
-    View mLoginFormView;
-    @BindView(R.id.register)
-    Button mRegister;
-    @BindView(R.id.email_sign_in_button)
-    Button mEmailSignInButton;
+    @BindView(R.id.email) AutoCompleteTextView mEmailView;
+    @BindView(R.id.password) EditText mPasswordView;
+    @BindView(R.id.login_progress) View mProgressView;
+    @BindView(R.id.login_form) View mLoginFormView;
+    @BindView(R.id.register) Button mRegister;
+    @BindView(R.id.email_sign_in_button) Button mEmailSignInButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         setContentView(R.layout.activity_login);
 
         ButterKnife.bind(this);
