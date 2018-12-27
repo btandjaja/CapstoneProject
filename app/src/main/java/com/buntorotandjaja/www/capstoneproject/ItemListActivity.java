@@ -48,6 +48,7 @@ public class ItemListActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         switch(item.getItemId()) {
             case R.id.menu_your_listing:
                 // TODO call your_listing activity
@@ -57,6 +58,8 @@ public class ItemListActivity extends AppCompatActivity {
                 break;
             case R.id.menu_sell:
                 // TODO call sell activity
+                intent = new Intent(this, SellActivity.class);
+                startActivity(intent);
                 break;
             case R.id.menu_logout:
                 logout();
@@ -78,6 +81,7 @@ public class ItemListActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         logout();
+        // TODO need?
         super.onBackPressed();
     }
 

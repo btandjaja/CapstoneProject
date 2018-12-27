@@ -156,10 +156,6 @@ public class RegisterActivity extends AppCompatActivity {
                             Log.d(this.getClass().getSimpleName(), "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             Intent intent = new Intent(RegisterActivity.this, ItemListActivity.class);
-                            // TODO clear top activity stack
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                            intent.putExtra(user.getUid(), getString(R.string.unique_id));
                             startActivity(intent);
                         } else {
                             // TODO collusion exception
