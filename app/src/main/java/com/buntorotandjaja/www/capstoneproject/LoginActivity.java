@@ -119,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
             mPasswordView.requestFocus();
             return;
         }
-        
+
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
             mEmailView.setError(getString(R.string.error_field_required));
