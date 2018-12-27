@@ -146,21 +146,6 @@ public class LoginActivity extends AppCompatActivity {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    private boolean uniqueChar(char c) {
-        //TODO check if it contains "#$%&"
-        switch (c) {
-            case '$':
-                return true;
-            case '#':
-                return true;
-            case '&':
-                return true;
-            case '%':
-                return true;
-        }
-        return false;
-    }
-
     public void register(View view) {
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
