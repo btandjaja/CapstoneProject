@@ -1,28 +1,70 @@
 package com.buntorotandjaja.www.capstoneproject;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
 public class ItemListActivity extends AppCompatActivity {
-    @BindView(R.id.tv_uid)
-    TextView mUid;
+
+    @BindView(R.id.tv_listing) TextView mTvListing;
+    @BindView(R.id.tb_item_list) Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_list);
         ButterKnife.bind(this);
+        // TODO set toolbar
+        setToolbar();
         // TODO used when user want to sell item
-        String uid = getIntent().getStringExtra(getString(R.string.unique_id));
+//        String uid = getIntent().getStringExtra(getString(R.string.unique_id));
+    }
+
+    private void setToolbar() {
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayUseLogoEnabled(false);
+        mTvListing.setText(getString(R.string.app_name));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.menu_your_listing:
+                // TODO call your_listing activity
+                break;
+            case R.id.menu_sold:
+                // TODO call sold activity
+                break;
+            case R.id.menu_sell:
+                // TODO call sell activity
+                break;
+            case R.id.menu_logout:
+                logout();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
     }
 
     @Override

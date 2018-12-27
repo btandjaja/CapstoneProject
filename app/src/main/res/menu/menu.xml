@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_sold"
+        android:title="@string/menu_sold"
+        app:showAsAction="collapseActionView" />
+    <item
+        android:id="@+id/menu_sell"
+        android:title="@string/menu_sell"
+        app:showAsAction="collapseActionView" />
+    <item
+        android:id="@+id/menu_your_listing"
+        android:title="@string/menu_your_list"
+        app:showAsAction="collapseActionView" />
+    <item
+        android:id="@+id/menu_logout"
+        android:title="@string/action_logout"
+        app:showAsAction="collapseActionView" />
+</menu>
