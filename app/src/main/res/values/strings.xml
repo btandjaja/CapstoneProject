@@ -7,6 +7,7 @@
     <string name="action_sign_in_short">Sign in</string>
     <string name="action_register">Register</string>
     <string name="action_logout">Log Out</string>
+    <string name="action_delete">Delete</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is invalid, please check requirement</string>
     <string name="error_incorrect_password">This password is incorrect</string>
@@ -31,6 +32,7 @@
     <string name="menu_sell">Sell</string>
     <string name="menu_your_list">Your Listing</string>
     <string name="title_activity_sell">Sell</string>
-    <string name="action_settings">Settings</string>
+    <string name="insert_image">Insert Image</string>
+
 
 </resources>

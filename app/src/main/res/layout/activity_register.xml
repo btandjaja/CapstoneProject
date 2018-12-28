@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
         android:elevation="4dp"
-        app:theme="@style/AppRegister">
+        app:theme="@style/AppBar">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/tb_register"

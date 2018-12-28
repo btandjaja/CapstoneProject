@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        app:theme="@style/AppRegister">
+        app:theme="@style/AppBar">
 
         <com.buntorotandjaja.www.capstoneproject.ThreeTwoImageView
             android:layout_width="match_parent"
