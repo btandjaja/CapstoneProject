@@ -33,6 +33,7 @@
     <string name="menu_your_list">Your Listing</string>
     <string name="title_activity_sell">Sell</string>
     <string name="insert_image">Insert Image</string>
-
+    <string name="item_name">Title</string>
+    <string name="max_length">maximum 25 characters</string>
 
 </resources>
