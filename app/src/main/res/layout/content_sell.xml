@@ -45,6 +45,7 @@
                 android:src="@drawable/add_a_photo_44dp" />
         </LinearLayout>
 
+        <!-- item title-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -61,6 +62,31 @@
 
             <EditText
                 android:id="@+id/et_item_title"
+                android:inputType="textAutoComplete"
+                android:hint="@string/max_length"
+                android:maxLength="25"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <!-- item description -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/activity_margin_16dp">
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/text_margin"
+                android:layout_gravity="center_vertical"
+                android:text="@string/item_description" />
+
+            <EditText
+                android:id="@+id/et_item_description"
                 android:inputType="textAutoComplete"
                 android:hint="@string/max_length"
                 android:maxLength="25"

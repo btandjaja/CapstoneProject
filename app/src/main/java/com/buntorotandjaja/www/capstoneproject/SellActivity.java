@@ -18,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import android.provider.MediaStore;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,6 +30,7 @@ import android.widget.Toast;
 public class SellActivity extends AppCompatActivity {
 
     private final static int PICK_IMAGE_REQUEST = 1;
+    private final static int REQUEST_IMAGE_CAPTURE = 2;
 
     @BindView(R.id.toolbar_sell_acitivty) Toolbar mToolbar;
     @BindView(R.id.imageButton_take_picture) ImageButton mTakePicture;
@@ -62,13 +64,27 @@ public class SellActivity extends AppCompatActivity {
             }
         });
 
+        // TODO picture from file
         mItemTitle.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (mItemTitle.getText().toString().length() >= Integer.valueOf(getString(R.string.max_length))) {
-                    Toast.makeText(SellActivity.this, "Maximum 25 characters", Toast.LENGTH_SHORT).show();
+                if (mItemTitle.getText().toString().length() >= Integer.valueOf(getString(R.string.char25))) {
+                    Toast.makeText(SellActivity.this, getString(R.string.max_length), Toast.LENGTH_SHORT).show();
                 }
                 return false;
+            }
+        });
+
+        // TODO picture from camera
+        mTakePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                } else {
+                    Toast.makeText(SellActivity.this, getString(R.string.no_camera_available), Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -81,19 +97,21 @@ public class SellActivity extends AppCompatActivity {
     }
 
     private void openFile() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+        Intent imageFromFileIntent = new Intent();
+        imageFromFileIntent.setType("image/*");
+        imageFromFileIntent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(imageFromFileIntent, PICK_IMAGE_REQUEST);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null &&
-                data.getData() != null) {
+        if ((requestCode == PICK_IMAGE_REQUEST || requestCode == REQUEST_IMAGE_CAPTURE) &&
+                resultCode == RESULT_OK && data != null && data.getData() != null) {
             mImageUri = data.getData();
             Picasso.get().load(mImageUri).fit().centerCrop().into(mItemImage);
+        } else {
+            // TODO show error?
         }
     }
 

@@ -34,6 +34,9 @@
     <string name="title_activity_sell">Sell</string>
     <string name="insert_image">Insert Image</string>
     <string name="item_name">Title</string>
-    <string name="max_length">maximum 25 characters</string>
+    <string name="item_description">Description</string>
+    <string name="max_length">maximum 23 characters</string>
+    <string name="char25">23</string>
+    <string name="no_camera_available">Device does not have camera</string>
 
 </resources>
