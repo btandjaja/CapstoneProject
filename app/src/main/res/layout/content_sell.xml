@@ -49,50 +49,75 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="@dimen/activity_margin_16dp">
+            android:layout_marginStart="@dimen/activity_margin_16dp"
+            android:layout_marginTop="@dimen/activity_margin_16dp"
+            android:layout_marginEnd="@dimen/activity_margin_16dp"
+            android:orientation="horizontal">
 
             <TextView
                 style="@style/TextAppearance.AppCompat.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/text_margin"
                 android:layout_gravity="center_vertical"
                 android:text="@string/item_name" />
 
             <EditText
                 android:id="@+id/et_item_title"
-                android:inputType="textAutoComplete"
-                android:hint="@string/max_length"
-                android:maxLength="25"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:hint="@string/max_length"
+                android:inputType="textImeMultiLine"
+                android:maxLength="23" />
         </LinearLayout>
 
         <!-- item description -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="@dimen/activity_margin_16dp">
+            android:layout_marginStart="@dimen/activity_margin_16dp"
+            android:layout_marginTop="@dimen/activity_margin_16dp"
+            android:layout_marginEnd="@dimen/activity_margin_16dp"
+            android:orientation="vertical">
 
             <TextView
                 style="@style/TextAppearance.AppCompat.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/text_margin"
-                android:layout_gravity="center_vertical"
-                android:text="@string/item_description" />
+                android:text="@string/description" />
 
             <EditText
                 android:id="@+id/et_item_description"
-                android:inputType="textAutoComplete"
-                android:hint="@string/max_length"
-                android:maxLength="25"
-                android:layout_gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top|start"
+                android:hint="@string/description_max_character"
+                android:inputType="textMultiLine"
+                android:minLines="1"
+                android:maxLength="@string/description_max_length"
+                android:scrollbars="vertical"
+                android:scrollbarAlwaysDrawVerticalTrack="true"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_margin_16dp"
+            android:layout_marginTop="@dimen/activity_margin_16dp"
+            android:layout_marginEnd="@dimen/activity_margin_16dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:text="@string/item_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
+
+            <EditText
+                android:id="@+id/et_item_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType=""
+                />
         </LinearLayout>
     </LinearLayout>
 
