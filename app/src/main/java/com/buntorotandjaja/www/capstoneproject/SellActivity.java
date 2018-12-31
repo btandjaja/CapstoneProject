@@ -43,11 +43,16 @@ public class SellActivity extends AppCompatActivity {
     private final static int PERMISSION_REQUEST_CODE = 3;
     private final static String TAG = SellActivity.class.getSimpleName();
 
-    @BindView(R.id.toolbar_sell_acitivty) Toolbar mToolbar;
-    @BindView(R.id.imageButton_take_picture) ImageButton mTakePicture;
-    @BindView(R.id.imageButton_upload_file) ImageButton mUploadPicture;
-    @BindView(R.id.item_image) ThreeTwoImageView mItemImage;
-    @BindView(R.id.et_item_title) EditText mItemTitle;
+    @BindView(R.id.toolbar_sell_acitivty)
+    Toolbar mToolbar;
+    @BindView(R.id.imageButton_take_picture)
+    ImageButton mTakePicture;
+    @BindView(R.id.imageButton_upload_file)
+    ImageButton mUploadPicture;
+    @BindView(R.id.item_image)
+    ThreeTwoImageView mItemImage;
+    @BindView(R.id.et_item_title)
+    EditText mItemTitle;
 
     private String mUId;
     private Uri mImageUri;
@@ -64,13 +69,6 @@ public class SellActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sell);
         ButterKnife.bind(this);
         setupToolbar();
-
-        if (Build.VERSION.SDK_INT >= 23) {
-            requestPermissions(
-                    new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    PERMISSION_REQUEST_CODE);
-        }
-
 
         // TODO needed when
         mDb = FirebaseFirestore.getInstance();
@@ -97,6 +95,11 @@ public class SellActivity extends AppCompatActivity {
         mTakePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= 23) {
+                    requestPermissions(
+                            new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            PERMISSION_REQUEST_CODE);
+                }
                 dispatchTakePictureIntent();
             }
         });
@@ -160,12 +163,16 @@ public class SellActivity extends AppCompatActivity {
                 data.getData() != null) {
             mImageUri = data.getData();
             Picasso.get().load(mImageUri).fit().centerCrop().into(mItemImage);
-        } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null &&
-                data.getData() != null) {
-            galleryAddPic();
-            setPic();
+        } else if (requestCode == REQUEST_IMAGE_CAPTURE) {
+            if (resultCode == RESULT_OK) {
+                mItemImage.setImageURI(Uri.parse(mCurrentPhotoPath));
+                galleryAddPic();
+//                setPic();
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(this, "Operation cancelled", Toast.LENGTH_SHORT).show();
+            }
         } else {
-            Toast.makeText(this, "An error occurs.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "An error occurs", Toast.LENGTH_LONG).show();
             return;
         }
     }
@@ -192,7 +199,7 @@ public class SellActivity extends AppCompatActivity {
         int photoH = bmOptions.outHeight;
 
         // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
 
         // Decode the image file into a Bitmap sized to fill the View
         bmOptions.inJustDecodeBounds = false;
@@ -211,7 +218,7 @@ public class SellActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.action_delete:
                 // TODO delete all fields
                 mItemImage.setImageDrawable(getDrawable(R.drawable.no_image_icon));
