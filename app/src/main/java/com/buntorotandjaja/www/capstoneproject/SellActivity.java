@@ -8,10 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -101,13 +98,6 @@ public class SellActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dispatchTakePictureIntent();
-//                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-//                    File photoFile = createImageFile();
-//                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-//                } else {
-//                    Toast.makeText(SellActivity.this, getString(R.string.no_camera_available), Toast.LENGTH_SHORT).show();
-//                }
             }
         });
     }
@@ -148,18 +138,6 @@ public class SellActivity extends AppCompatActivity {
     }
 
     private File createImageFile() throws IOException {
-        // Create an image file
-//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-//        String imageFileName = "JPEG_" + timeStamp + "_";
-//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-//        File image = null;
-//        try {
-//            image = File.createTempFile(imageFileName, ".jpg", storageDir);
-//        } catch (IOException e) {
-//            Log.e(TAG, e.toString());
-//        }
-//        mCurrentPhotoPath = image.getAbsolutePath();
-//        return image;
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
