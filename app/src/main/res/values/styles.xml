@@ -38,8 +38,6 @@
         <item name="android:paddingRight">16dp</item>
     </style>
 
-    <style name="popupTheme" parent="Theme.AppCompat.Light.NoActionBar"></style>>
-
     <!-- activity_register -->
     <style name="register_button" parents="?android:textAppearanceSmall">
         <item name="android:layout_marginTop">@dimen/activity_margin_16dp</item>

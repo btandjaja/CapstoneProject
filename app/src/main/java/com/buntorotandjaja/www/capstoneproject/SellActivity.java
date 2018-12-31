@@ -20,11 +20,13 @@ import butterknife.ButterKnife;
 
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -41,21 +43,20 @@ public class SellActivity extends AppCompatActivity {
     private final static int PERMISSION_REQUEST_CODE = 3;
     private final static String TAG = SellActivity.class.getSimpleName();
 
-    @BindView(R.id.toolbar_sell_acitivty)
-    Toolbar mToolbar;
-    @BindView(R.id.imageButton_take_picture)
-    ImageButton mTakePicture;
-    @BindView(R.id.imageButton_upload_file)
-    ImageButton mUploadPicture;
-    @BindView(R.id.item_image)
-    ThreeTwoImageView mItemImage;
-    @BindView(R.id.et_item_title)
-    EditText mItemTitle;
+    @BindView(R.id.toolbar_sell_acitivty) Toolbar mToolbar;
+    @BindView(R.id.imageButton_take_picture) ImageButton mTakePicture;
+    @BindView(R.id.imageButton_upload_file) ImageButton mUploadPicture;
+    @BindView(R.id.item_image) ThreeTwoImageView mItemImage;
+    @BindView(R.id.et_item_title) EditText mItemTitle;
+    @BindView(R.id.et_item_description) EditText mItemDescription;
     @BindView(R.id.et_item_price) EditText mPrice;
+    @BindView(R.id.button_sell) Button mSell;
 
     private String mUId;
     private Uri mImageUri;
     private String mCurrentPhotoPath;
+    private Boolean mHasImage;
+    private Boolean meetPostingRequirement;
 
     // Firebase
     private FirebaseFirestore mDb;
@@ -68,7 +69,8 @@ public class SellActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sell);
         ButterKnife.bind(this);
         setupToolbar();
-
+        mHasImage = false;
+        meetPostingRequirement = false;
         // TODO needed when
         mDb = FirebaseFirestore.getInstance();
         mUId = FirebaseAuth.getInstance().getUid();
@@ -76,17 +78,6 @@ public class SellActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 openFile();
-            }
-        });
-
-        // TODO picture from file
-        mItemTitle.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (mItemTitle.getText().toString().length() >= Integer.valueOf(getString(R.string.char25))) {
-                    Toast.makeText(SellActivity.this, getString(R.string.max_length), Toast.LENGTH_SHORT).show();
-                }
-                return false;
             }
         });
 
@@ -105,6 +96,17 @@ public class SellActivity extends AppCompatActivity {
 
         // TODO price input convert to currency format
         mPrice.addTextChangedListener(new DecimalCurrency(mPrice, "#,###"));
+
+        // TODO sell button
+        mSell.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkEmptyViews();
+                if (meetPostingRequirement) {
+                    listConfirmed();
+                }
+            }
+        });
     }
 
     private void setupToolbar() {
@@ -167,6 +169,7 @@ public class SellActivity extends AppCompatActivity {
             Picasso.get().load(mImageUri).fit().centerCrop().into(mItemImage);
         } else if (requestCode == REQUEST_IMAGE_CAPTURE) {
             if (resultCode == RESULT_OK) {
+                mHasImage = true;
                 mItemImage.setImageURI(Uri.parse(mCurrentPhotoPath));
             } else if (resultCode == RESULT_CANCELED) {
                 // TODO store in strings.xml
@@ -175,6 +178,27 @@ public class SellActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, getString(R.string.add_picture_or_camera_error), Toast.LENGTH_LONG).show();
         }
+    }
+
+    // check for views before confirming to sell
+    private void checkEmptyViews() {
+        if (!mHasImage) {
+            Toast.makeText(this, getString(R.string.error_no_image), Toast.LENGTH_LONG).show();
+            return;
+        } else if (TextUtils.isEmpty(mItemTitle.getText().toString())) {
+            mItemTitle.setError(getString(R.string.error_title_required));
+            mItemTitle.requestFocus();
+            return;
+        } else if (TextUtils.isEmpty(mItemDescription.getText().toString())) {
+            mItemDescription.setError(getString(R.string.error_description_required));
+            mItemDescription.requestFocus();
+            return;
+        } else if (TextUtils.isEmpty(mPrice.getText().toString())) {
+            mPrice.setError(getString(R.string.error_price_required));
+            mPrice.requestFocus();
+            return;
+        }
+        meetPostingRequirement = true;
     }
 
     @Override
@@ -189,6 +213,7 @@ public class SellActivity extends AppCompatActivity {
             case R.id.action_delete:
                 // TODO delete all fields
                 mItemImage.setImageDrawable(getDrawable(R.drawable.no_image_icon));
+                mHasImage = true;
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

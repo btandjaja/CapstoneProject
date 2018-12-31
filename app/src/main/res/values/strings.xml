@@ -13,18 +13,23 @@
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="error_nonmatch_password">Password does not match!</string>
+    <string name="error_no_image">Please add an image</string>
+    <string name="error_title_required">Please provide title</string>
+    <string name="error_description_required">Please provide description</string>
+    <string name="error_price_required">Min is $0.01</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <!-- login and password related -->
     <string name="username_hint">username</string>
     <string name="password">password</string>
-
-    <string name="title_activity_register">Register</string>
-
     <string name="retype_password">Retype Password</string>
     <string name="password_length">Password length must be 8 - 16 with unique char #,$,%,&amp;
         and at least one capitalize letter</string>
     <string name="create_account">Create Account</string>
+
+    <!-- title -->
+    <string name="title_activity_register">Register</string>
 
     <string name="unique_id">USER_SPECIFIC_ID</string>
 
@@ -47,5 +52,7 @@
     <string name="concate_fileprovider">.fileprovider</string>
 
     <string name="add_picture_or_camera_error">An error has occur</string>
+
+    <string name="sell_button">Sell</string>
 
 </resources>
