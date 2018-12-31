@@ -36,7 +36,7 @@
     <string name="item_name">Title</string>
     <string name="description">Description</string>
     <string name="item_description">description</string>
-    <string name="item_price">Price $:</string>
+    <string name="item_price">Price (USD):</string>
     <string name="max_length">maximum 23 characters</string>
     <string name="char25">23</string>
     <string name="description_max_length">250</string>

@@ -51,6 +51,7 @@ public class SellActivity extends AppCompatActivity {
     ThreeTwoImageView mItemImage;
     @BindView(R.id.et_item_title)
     EditText mItemTitle;
+    @BindView(R.id.et_item_price) EditText mPrice;
 
     private String mUId;
     private Uri mImageUri;
@@ -101,6 +102,9 @@ public class SellActivity extends AppCompatActivity {
                 dispatchTakePictureIntent();
             }
         });
+
+        // TODO price input convert to currency format
+        mPrice.addTextChangedListener(new DecimalCurrency(mPrice, "#,###"));
     }
 
     private void setupToolbar() {
