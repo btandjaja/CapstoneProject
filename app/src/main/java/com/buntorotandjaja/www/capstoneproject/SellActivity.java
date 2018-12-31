@@ -2,8 +2,6 @@ package com.buntorotandjaja.www.capstoneproject;
 
 import android.Manifest;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -132,7 +130,8 @@ public class SellActivity extends AppCompatActivity {
             // Continue only if the File was successfully created
             if (photoFile != null) {
                 Uri photoUri = FileProvider.getUriForFile(this,
-                        "com.buntorotandjaja.www.capstoneproject.fileprovider",
+                        getPackageName() + getString(R.string.concate_fileprovider),
+//                        "com.buntorotandjaja.www.capstoneproject.fileprovider",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -167,11 +166,11 @@ public class SellActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 mItemImage.setImageURI(Uri.parse(mCurrentPhotoPath));
             } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(this, "Operation cancelled", Toast.LENGTH_SHORT).show();
+                // TODO store in strings.xml
+                Toast.makeText(this, getString(R.string.camera_operation_cancelled), Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(this, "An error occurs", Toast.LENGTH_LONG).show();
-            return;
+            Toast.makeText(this, getString(R.string.add_picture_or_camera_error), Toast.LENGTH_LONG).show();
         }
     }
 

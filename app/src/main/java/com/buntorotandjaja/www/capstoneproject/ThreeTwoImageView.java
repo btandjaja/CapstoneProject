@@ -24,11 +24,3 @@ public class ThreeTwoImageView extends AppCompatImageView {
         super.onMeasure(widthMeasureSpec, threeTwoHeightSpec);
     }
 }
-
-/*
-sample code
-<customImageView
-android:layout_width="match_parent"
-android:layout_height="0dp"
-android:scaleType="ceterCrop"
- */
