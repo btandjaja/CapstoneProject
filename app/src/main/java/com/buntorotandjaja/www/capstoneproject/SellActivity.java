@@ -131,7 +131,6 @@ public class SellActivity extends AppCompatActivity {
             if (photoFile != null) {
                 Uri photoUri = FileProvider.getUriForFile(this,
                         getPackageName() + getString(R.string.concate_fileprovider),
-//                        "com.buntorotandjaja.www.capstoneproject.fileprovider",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -173,7 +172,6 @@ public class SellActivity extends AppCompatActivity {
             Toast.makeText(this, getString(R.string.add_picture_or_camera_error), Toast.LENGTH_LONG).show();
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
