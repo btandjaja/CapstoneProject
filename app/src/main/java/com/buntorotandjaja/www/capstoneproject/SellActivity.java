@@ -166,8 +166,6 @@ public class SellActivity extends AppCompatActivity {
         } else if (requestCode == REQUEST_IMAGE_CAPTURE) {
             if (resultCode == RESULT_OK) {
                 mItemImage.setImageURI(Uri.parse(mCurrentPhotoPath));
-                galleryAddPic();
-//                setPic();
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "Operation cancelled", Toast.LENGTH_SHORT).show();
             }
@@ -177,38 +175,6 @@ public class SellActivity extends AppCompatActivity {
         }
     }
 
-    // save picture
-    private void galleryAddPic() {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(mCurrentPhotoPath);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        this.sendBroadcast(mediaScanIntent);
-    }
-
-    private void setPic() {
-        // Get imageView dimension
-        int targetW = mItemImage.getWidth();
-        int targetH = mItemImage.getHeight();
-
-        // Get dimension of the bitmap
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
-
-        // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
-
-        // Decode the image file into a Bitmap sized to fill the View
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-        bmOptions.inPurgeable = true;
-
-        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-        mItemImage.setImageBitmap(bitmap);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
