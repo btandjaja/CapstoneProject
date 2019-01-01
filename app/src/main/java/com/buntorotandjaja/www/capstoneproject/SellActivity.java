@@ -180,6 +180,7 @@ public class SellActivity extends AppCompatActivity {
         if (requestCode == PICK_IMAGE_REQUEST && data != null &&
                 data.getData() != null) {
             if (resultCode == RESULT_OK) {
+                mHasImage = true;
                 mImageUri = data.getData();
                 Picasso.get().load(mImageUri).fit().centerCrop().into(mItemImage);
                 meetPostingRequirement = true;
@@ -248,14 +249,22 @@ public class SellActivity extends AppCompatActivity {
                                     mProgressBarItemUploading.setProgress(0);
                                 }
                             }, 500);
-                            Toast.makeText(SellActivity.this, "Listing successful!", Toast.LENGTH_LONG).show();
                             fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     final String downloadUrl = uri.toString();
-                                    Upload upload = new Upload(uploadInfo, downloadUrl);
+                                    Upload upload = new Upload(uploadInfo,
+                                            downloadUrl,
+                                            mItemTitle.getText().toString().trim(),
+                                            mItemDescription.getText().toString().trim(),
+                                            FirebaseAuth.getInstance().getUid(),
+                                            Double.valueOf(mPrice.getText().toString()));
                                     String uploadId = mDbReference.push().getKey();
+                                    if (uploadId != null) {
+                                        mDbReference.child(uploadId).setValue(upload);
+                                        Toast.makeText(SellActivity.this, "Listing successful!", Toast.LENGTH_LONG).show();
 
+                                    }
                                 }
                             });
                         }
@@ -293,15 +302,19 @@ public class SellActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_delete:
                 // TODO delete all fields
-                mItemImage.setImageDrawable(getDrawable(R.drawable.no_image_icon));
-                mItemTitle.setText("");
-                mItemDescription.setText("");
-                mPrice.setText("");
-                mHasImage = false;
-                meetPostingRequirement = false;
+                clearInput();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void clearInput() {
+        mItemImage.setImageDrawable(getDrawable(R.drawable.no_image_icon));
+        mItemTitle.setText("");
+        mItemDescription.setText("");
+        mPrice.setText("");
+        mHasImage = false;
+        meetPostingRequirement = false;
     }
 }
