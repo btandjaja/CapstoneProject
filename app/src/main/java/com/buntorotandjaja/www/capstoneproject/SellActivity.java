@@ -256,14 +256,14 @@ public class SellActivity extends AppCompatActivity {
                                             mItemTitle.getText().toString().trim(),
                                             mItemDescription.getText().toString().trim(),
                                             FirebaseAuth.getInstance().getUid(),
-                                            Double.valueOf(mPrice.getText().toString().replace("$","")));
+                                            Double.valueOf(mPrice.getText().toString().replaceAll("[$,]","")));
                                     String uploadId = mDbReference.push().getKey();
-                                    if (uploadId != null) {
-                                        mDbReference.child(getString(R.string.app_name)).child(uploadId).setValue(upload);
+//                                    if (uploadId != null) {
+                                        mDbReference.push().setValue(upload);
                                         // TODO clear input after listing
                                         clearInput();
                                         Toast.makeText(SellActivity.this, "Listing complete!", Toast.LENGTH_LONG).show();
-                                    }
+//                                    }
                                 }
                             });
                         }
@@ -312,7 +312,7 @@ public class SellActivity extends AppCompatActivity {
         mItemImage.setImageDrawable(getDrawable(R.drawable.no_image_icon));
         mItemTitle.setText("");
         mItemDescription.setText("");
-        mPrice.setText("");
+        mPrice.setText("0");
         mHasImage = false;
         meetPostingRequirement = false;
     }
