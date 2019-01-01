@@ -12,7 +12,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -33,7 +32,6 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -85,8 +83,8 @@ public class SellActivity extends AppCompatActivity {
         mHasImage = false;
         meetPostingRequirement = false;
         // TODO needed when
-        mDbReference = FirebaseDatabase.getInstance().getReference("uploads");
-        mStorageReference = FirebaseStorage.getInstance().getReference("uploads");
+        mDbReference = FirebaseDatabase.getInstance().getReference(getString(R.string.app_name));
+        mStorageReference = FirebaseStorage.getInstance().getReference(getString(R.string.app_name));
         mUId = FirebaseAuth.getInstance().getUid();
         mUploadPicture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -234,7 +232,7 @@ public class SellActivity extends AppCompatActivity {
         if (mImageUri != null) {
             mUId = FirebaseAuth.getInstance().getUid();
             final String uploadInfo = mUId + "_"
-                    + mItemTitle.getText().toString().trim()
+                    + mItemTitle.getText().toString().trim() + "_"
                     + System.currentTimeMillis()
                     + "." + getFileExtension(mImageUri);
             final StorageReference fileReference = mStorageReference.child(uploadInfo);
@@ -242,6 +240,8 @@ public class SellActivity extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            // TODO remove
+                            Toast.makeText(SellActivity.this, "in on Success", Toast.LENGTH_SHORT).show();
                             Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
                                 @Override
@@ -258,12 +258,11 @@ public class SellActivity extends AppCompatActivity {
                                             mItemTitle.getText().toString().trim(),
                                             mItemDescription.getText().toString().trim(),
                                             FirebaseAuth.getInstance().getUid(),
-                                            Double.valueOf(mPrice.getText().toString()));
+                                            Double.valueOf(mPrice.getText().toString().replace("$","")));
                                     String uploadId = mDbReference.push().getKey();
                                     if (uploadId != null) {
                                         mDbReference.child(uploadId).setValue(upload);
                                         Toast.makeText(SellActivity.this, "Listing successful!", Toast.LENGTH_LONG).show();
-
                                     }
                                 }
                             });
