@@ -1,24 +1,35 @@
 package com.buntorotandjaja.www.capstoneproject;
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
+import androidx.core.widget.ContentLoadingProgressBar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
@@ -26,6 +37,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -51,6 +63,7 @@ public class SellActivity extends AppCompatActivity {
     @BindView(R.id.et_item_description) EditText mItemDescription;
     @BindView(R.id.et_item_price) EditText mPrice;
     @BindView(R.id.button_sell) Button mSell;
+    @BindView(R.id.pb_uploading_image) ContentLoadingProgressBar mProgressBarItemUploading;
 
     private String mUId;
     private Uri mImageUri;
@@ -59,8 +72,8 @@ public class SellActivity extends AppCompatActivity {
     private Boolean meetPostingRequirement;
 
     // Firebase
-    private FirebaseFirestore mDb;
-    private StorageReference mStorageRef;
+    private DatabaseReference mDbReference;
+    private StorageReference mStorageReference;
 
 
     @Override
@@ -72,7 +85,8 @@ public class SellActivity extends AppCompatActivity {
         mHasImage = false;
         meetPostingRequirement = false;
         // TODO needed when
-        mDb = FirebaseFirestore.getInstance();
+        mDbReference = FirebaseDatabase.getInstance().getReference("uploads");
+        mStorageReference = FirebaseStorage.getInstance().getReference("uploads");
         mUId = FirebaseAuth.getInstance().getUid();
         mUploadPicture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,7 +117,7 @@ public class SellActivity extends AppCompatActivity {
             public void onClick(View v) {
                 checkEmptyViews();
                 if (meetPostingRequirement) {
-                    listConfirmed();
+                    uploadFile();
                 }
             }
         });
@@ -135,10 +149,10 @@ public class SellActivity extends AppCompatActivity {
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                Uri photoUri = FileProvider.getUriForFile(this,
+                mImageUri = FileProvider.getUriForFile(this,
                         getPackageName() + getString(R.string.concate_fileprovider),
                         photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         }
@@ -163,20 +177,27 @@ public class SellActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null &&
+        if (requestCode == PICK_IMAGE_REQUEST && data != null &&
                 data.getData() != null) {
-            mImageUri = data.getData();
-            Picasso.get().load(mImageUri).fit().centerCrop().into(mItemImage);
+            if (resultCode == RESULT_OK) {
+                mImageUri = data.getData();
+                Picasso.get().load(mImageUri).fit().centerCrop().into(mItemImage);
+                meetPostingRequirement = true;
+            } else {
+                meetPostingRequirement = false;
+                operationCancelled();
+            }
         } else if (requestCode == REQUEST_IMAGE_CAPTURE) {
             if (resultCode == RESULT_OK) {
                 mHasImage = true;
                 mItemImage.setImageURI(Uri.parse(mCurrentPhotoPath));
             } else if (resultCode == RESULT_CANCELED) {
-                // TODO store in strings.xml
-                Toast.makeText(this, getString(R.string.camera_operation_cancelled), Toast.LENGTH_SHORT).show();
+                operationCancelled();
+                meetPostingRequirement = false;
             }
         } else {
             Toast.makeText(this, getString(R.string.add_picture_or_camera_error), Toast.LENGTH_LONG).show();
+            meetPostingRequirement = false;
         }
     }
 
@@ -185,20 +206,72 @@ public class SellActivity extends AppCompatActivity {
         if (!mHasImage) {
             Toast.makeText(this, getString(R.string.error_no_image), Toast.LENGTH_LONG).show();
             return;
-        } else if (TextUtils.isEmpty(mItemTitle.getText().toString())) {
+        } else if (TextUtils.isEmpty(mItemTitle.getText().toString().trim())) {
             mItemTitle.setError(getString(R.string.error_title_required));
             mItemTitle.requestFocus();
             return;
-        } else if (TextUtils.isEmpty(mItemDescription.getText().toString())) {
+        } else if (TextUtils.isEmpty(mItemDescription.getText().toString().trim())) {
             mItemDescription.setError(getString(R.string.error_description_required));
             mItemDescription.requestFocus();
             return;
-        } else if (TextUtils.isEmpty(mPrice.getText().toString())) {
+        } else if (TextUtils.isEmpty(mPrice.getText().toString().trim())) {
             mPrice.setError(getString(R.string.error_price_required));
             mPrice.requestFocus();
             return;
         }
         meetPostingRequirement = true;
+    }
+
+    private String getFileExtension(Uri uri) {
+        ContentResolver cR = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(cR.getType(uri));
+    }
+
+    // upload to firebaseDatabase and firebaseStorage (image)
+    private void uploadFile() {
+        if (mImageUri != null) {
+            mUId = FirebaseAuth.getInstance().getUid();
+            StorageReference fileReference = mStorageReference.child(mUId + "_"
+                    + mItemTitle.getText().toString()
+                    + System.currentTimeMillis()
+                    + "." + getFileExtension(mImageUri));
+            fileReference.putFile(mImageUri)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mProgressBarItemUploading.setProgress(0);
+
+                                }
+                            }, 500);
+                            Toast.makeText(SellActivity.this, "Listing successful!", Toast.LENGTH_LONG).show();
+
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = ( 100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                            mProgressBarItemUploading.setProgress((int)progress);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(SellActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        } else {
+            Toast.makeText(this, "No image selected", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void operationCancelled() {
+        Toast.makeText(this, getString(R.string.camera_operation_cancelled), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -213,11 +286,14 @@ public class SellActivity extends AppCompatActivity {
             case R.id.action_delete:
                 // TODO delete all fields
                 mItemImage.setImageDrawable(getDrawable(R.drawable.no_image_icon));
-                mHasImage = true;
+                mItemTitle.setText("");
+                mItemDescription.setText("");
+                mPrice.setText("");
+                mHasImage = false;
+                meetPostingRequirement = false;
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-
     }
 }
