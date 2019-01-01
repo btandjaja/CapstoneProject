@@ -121,10 +121,6 @@
                 />
         </LinearLayout>
 
-        <androidx.core.widget.ContentLoadingProgressBar
-            android:id="@+id/pb_uploading_image"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
         <!-- confirm sell button, add to firebaseStore -->
         <Button
             android:id="@+id/button_sell"

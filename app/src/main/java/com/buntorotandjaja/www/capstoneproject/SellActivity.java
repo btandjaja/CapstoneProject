@@ -240,8 +240,6 @@ public class SellActivity extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            // TODO remove
-                            Toast.makeText(SellActivity.this, "in on Success", Toast.LENGTH_SHORT).show();
                             Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
                                 @Override
@@ -261,8 +259,10 @@ public class SellActivity extends AppCompatActivity {
                                             Double.valueOf(mPrice.getText().toString().replace("$","")));
                                     String uploadId = mDbReference.push().getKey();
                                     if (uploadId != null) {
-                                        mDbReference.child(uploadId).setValue(upload);
-                                        Toast.makeText(SellActivity.this, "Listing successful!", Toast.LENGTH_LONG).show();
+                                        mDbReference.child(getString(R.string.app_name)).child(uploadId).setValue(upload);
+                                        // TODO clear input after listing
+                                        clearInput();
+                                        Toast.makeText(SellActivity.this, "Listing complete!", Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });

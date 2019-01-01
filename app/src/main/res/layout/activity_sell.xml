@@ -29,6 +29,13 @@
                 android:textStyle="bold" />
         </androidx.appcompat.widget.Toolbar>
 
+        <androidx.core.widget.ContentLoadingProgressBar
+            android:id="@+id/pb_uploading_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <include layout="@layout/content_sell" />
