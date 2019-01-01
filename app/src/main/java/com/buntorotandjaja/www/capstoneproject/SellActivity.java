@@ -232,10 +232,11 @@ public class SellActivity extends AppCompatActivity {
     private void uploadFile() {
         if (mImageUri != null) {
             mUId = FirebaseAuth.getInstance().getUid();
-            StorageReference fileReference = mStorageReference.child(mUId + "_"
-                    + mItemTitle.getText().toString()
+            final String uploadInfo = mUId + "_"
+                    + mItemTitle.getText().toString().trim()
                     + System.currentTimeMillis()
-                    + "." + getFileExtension(mImageUri));
+                    + "." + getFileExtension(mImageUri);
+            final StorageReference fileReference = mStorageReference.child(uploadInfo);
             fileReference.putFile(mImageUri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -245,11 +246,18 @@ public class SellActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     mProgressBarItemUploading.setProgress(0);
-
                                 }
                             }, 500);
                             Toast.makeText(SellActivity.this, "Listing successful!", Toast.LENGTH_LONG).show();
+                            fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    final String downloadUrl = uri.toString();
+                                    Upload upload = new Upload(uploadInfo, downloadUrl);
+                                    String uploadId = mDbReference.push().getKey();
 
+                                }
+                            });
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
