@@ -12,6 +12,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -45,6 +47,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SellActivity extends AppCompatActivity {
 
@@ -70,8 +74,8 @@ public class SellActivity extends AppCompatActivity {
     private Boolean meetPostingRequirement;
 
     // Firebase
-    private DatabaseReference mDbReference;
     private StorageReference mStorageReference;
+    private FirebaseFirestore mFirestore;
 
 
     @Override
@@ -82,9 +86,11 @@ public class SellActivity extends AppCompatActivity {
         setupToolbar();
         mHasImage = false;
         meetPostingRequirement = false;
+        // TODO progressbar visibility
+//        mProgressBarItemUploading.setVisibility(View.GONE);
         // TODO needed when
-        mDbReference = FirebaseDatabase.getInstance().getReference(getString(R.string.app_name));
         mStorageReference = FirebaseStorage.getInstance().getReference(getString(R.string.app_name));
+        mFirestore = FirebaseFirestore.getInstance();
         mUId = FirebaseAuth.getInstance().getUid();
         mUploadPicture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,7 +121,10 @@ public class SellActivity extends AppCompatActivity {
             public void onClick(View v) {
                 checkEmptyViews();
                 if (meetPostingRequirement) {
+                    // TODO progress bar unable to hide
+//                    mProgressBarItemUploading.setVisibility(View.VISIBLE);
                     uploadFile();
+//                    mProgressBarItemUploading.setVisibility(View.GONE);
                 }
             }
         });
@@ -230,7 +239,7 @@ public class SellActivity extends AppCompatActivity {
     // upload to firebaseDatabase and firebaseStorage (image)
     private void uploadFile() {
         if (mImageUri != null) {
-            mUId = FirebaseAuth.getInstance().getUid();
+            // TODO firebaseStorage
             final String uploadInfo = mUId + "_"
                     + mItemTitle.getText().toString().trim() + "_"
                     + System.currentTimeMillis()
@@ -247,22 +256,48 @@ public class SellActivity extends AppCompatActivity {
                                     mProgressBarItemUploading.setProgress(0);
                                 }
                             }, 500);
+                            // TODO firebaseStore db
                             fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     final String downloadUrl = uri.toString();
-                                    Upload upload = new Upload(uploadInfo,
-                                            downloadUrl,
-                                            mItemTitle.getText().toString().trim(),
-                                            mItemDescription.getText().toString().trim(),
-                                            FirebaseAuth.getInstance().getUid(),
-                                            Double.valueOf(mPrice.getText().toString().replaceAll("[$,]","")));
-                                    String uploadId = mDbReference.push().getKey();
+                                    Map<String, String> listing = new HashMap<>();
+                                    listing.put("uploadInfo", uploadInfo);
+                                    listing.put("uid", mUId);
+                                    listing.put("sold", String.valueOf(false));
+                                    listing.put("buyer", "");
+                                    listing.put("downloadUrl", downloadUrl);
+                                    listing.put("title", mItemTitle.getText().toString().trim());
+                                    listing.put("description", mItemDescription.getText().toString().trim());
+                                    listing.put("price", mPrice.getText().toString().replaceAll("[$,]",""));
+                                    mFirestore.collection(getString(R.string.app_name))
+                                            .add(listing)
+                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                @Override
+                                                public void onSuccess(DocumentReference documentReference) {
+                                                    clearInput();
+                                                    Toast.makeText(SellActivity.this, "Listing complete!", Toast.LENGTH_LONG).show();
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Toast.makeText(SellActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+//                                    Upload upload = new Upload(uploadInfo,
+//                                            downloadUrl,
+//                                            mItemTitle.getText().toString().trim(),
+//                                            mItemDescription.getText().toString().trim(),
+//                                            mUId,
+//                                            Double.valueOf(mPrice.getText().toString().replaceAll("[$,]","")));
+//                                    DatabaseReference ref = mDbReference.push();
+//                                    String uploadId = ref.getKey();
 //                                    if (uploadId != null) {
-                                        mDbReference.push().setValue(upload);
-                                        // TODO clear input after listing
-                                        clearInput();
-                                        Toast.makeText(SellActivity.this, "Listing complete!", Toast.LENGTH_LONG).show();
+////                                        mDbReference.child(uploadId).setValue(upload);
+//                                        mDbReference.setValue(upload);
+//                                        clearInput();
+//                                        Toast.makeText(SellActivity.this, "Listing complete!", Toast.LENGTH_LONG).show();
 //                                    }
                                 }
                             });

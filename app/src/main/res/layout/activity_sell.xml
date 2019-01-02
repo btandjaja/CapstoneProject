@@ -31,12 +31,20 @@
 
         <androidx.core.widget.ContentLoadingProgressBar
             android:id="@+id/pb_uploading_image"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
-
+            android:layout_height="wrap_content"/>
     </com.google.android.material.appbar.AppBarLayout>
+
+    <!--<androidx.core.widget.ContentLoadingProgressBar-->
+        <!--android:id="@+id/pb_uploading_image"-->
+        <!--style="@style/Widget.AppCompat.ProgressBar.Horizontal"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:fitsSystemWindows="true"-->
+        <!--android:visibility="gone"-->
+        <!--app:layout_anchor="@id/app_bar"-->
+        <!--app:layout_anchorGravity="bottom" />-->
 
     <include layout="@layout/content_sell" />
 
