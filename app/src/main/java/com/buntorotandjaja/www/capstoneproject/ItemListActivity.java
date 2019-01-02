@@ -28,6 +28,7 @@ public class ItemListActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         // TODO set toolbar
         setToolbar();
+        setRecyclerView();
     }
 
     private void setToolbar() {
@@ -35,6 +36,10 @@ public class ItemListActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayUseLogoEnabled(false);
         mTvListing.setText(getString(R.string.app_name));
+    }
+
+    private void setRecyclerView() {
+
     }
 
     @Override
