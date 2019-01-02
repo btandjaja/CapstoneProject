@@ -1,40 +1,48 @@
 package com.buntorotandjaja.www.capstoneproject;
 
 public class Upload {
-    private String mName;
-    private String mImageUri;
+    private String mUploadInfo;
     private String mTitle;
     private String mDescription;
     private String mSellerUId;
+    private String mImageUri;
+    private String mBuyerUId;
     private boolean mSold;
-    private double mPrice;
+    private String mPrice;
 
     // empty constructor required
     public Upload() {}
 
-    public Upload(String name, String imageUri, String title, String description, String sellerUId, double price) {
-        if (name.trim().equals("")) {
-            name = "Title required";
+    public Upload(String uploadInfo, String imageUri, String title,
+                  String description, String sellerUId, String price) {
+        if (uploadInfo.trim().equals("")) {
+            uploadInfo = "Title required";
         }
-        mName = name;
+        mUploadInfo = uploadInfo;
         mImageUri = imageUri;
         mTitle = title;
         mDescription = description;
         mSellerUId = sellerUId;
-        mPrice = price;
+        mPrice = "$" + price;
         mSold = false;
+        mBuyerUId = "";
     }
-
-    public void setName (String name) { mName = name; }
+    // setter
+    public void setUploadInfo (String uploadInfo) { mUploadInfo = uploadInfo; }
     public void setImageUri (String imageUri) { mImageUri = imageUri; }
     public void setTitle (String title) { mTitle = title; }
     public void setDescription (String description) { mDescription = description; }
-    public void setPrice (double price) { mPrice = price; }
+    public void setSellerUId (String sellerUid) { mSellerUId = sellerUid; }
+    public void setPrice (String price) { mPrice = price; }
     public void setSold (boolean sold) { mSold = sold; }
-    public String getName () { return mName; }
+    public void setBuyerUId (String buyerUId) { mBuyerUId = buyerUId; }
+    // getter
+    public String getUploadInfo () { return mUploadInfo; }
     public String getImageUri () { return mImageUri; }
     public String getTitle () { return mTitle; }
     public String getDescription () { return mDescription; }
-    public double getPrice () { return mPrice; }
+    public String getSellerUId () { return mSellerUId; }
+    public String getPrice () { return mPrice; }
+    public String getBuyerUId () { return mBuyerUId; }
     public boolean getSold () { return mSold; }
 }

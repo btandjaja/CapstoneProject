@@ -56,4 +56,14 @@
 
     <string name="sell_button">Sell</string>
 
+    <!-- add / retrieve data -->
+    <string name="db_uploadInfo">uploadInfo</string>
+    <string name="db_uid">uid</string>
+    <string name="db_sold">sold</string>
+    <string name="db_buyer">buyer</string>
+    <string name="db_downloadUrl">downloadUrl</string>
+    <string name="db_title">title</string>
+    <string name="db_description">description</string>
+    <string name="db_price">price</string>
+
 </resources>

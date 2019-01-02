@@ -261,14 +261,14 @@ public class SellActivity extends AppCompatActivity {
                                 public void onSuccess(Uri uri) {
                                     final String downloadUrl = uri.toString();
                                     Map<String, String> listing = new HashMap<>();
-                                    listing.put("uploadInfo", uploadInfo);
-                                    listing.put("uid", mUId);
-                                    listing.put("sold", String.valueOf(false));
-                                    listing.put("buyer", "");
-                                    listing.put("downloadUrl", downloadUrl);
-                                    listing.put("title", mItemTitle.getText().toString().trim());
-                                    listing.put("description", mItemDescription.getText().toString().trim());
-                                    listing.put("price", mPrice.getText().toString().replaceAll("[$,]",""));
+                                    listing.put(getString(R.string.db_uploadInfo), uploadInfo);
+                                    listing.put(getString(R.string.db_uid), mUId);
+                                    listing.put(getString(R.string.db_sold), String.valueOf(false));
+                                    listing.put(getString(R.string.db_buyer), "");
+                                    listing.put(getString(R.string.db_downloadUrl), downloadUrl);
+                                    listing.put(getString(R.string.db_title), mItemTitle.getText().toString().trim());
+                                    listing.put(getString(R.string.db_description), mItemDescription.getText().toString().trim());
+                                    listing.put(getString(R.string.db_price), mPrice.getText().toString().replaceAll("[$,]",""));
                                     mFirestore.collection(getString(R.string.app_name))
                                             .add(listing)
                                             .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {

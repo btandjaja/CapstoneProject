@@ -26,6 +26,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ItemListActivity extends AppCompatActivity {
 
@@ -52,7 +53,14 @@ public class ItemListActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d("TAG", document.getId() + " " + document.getData());
+                        document.get(getString(R.string.db_uploadInfo));
+                        document.get(getString(R.string.db_uid));
+                        document.get(getString(R.string.db_sold));
+                        document.get(getString(R.string.db_buyer));
+                        document.get(getString(R.string.db_downloadUrl));
+                        document.get(getString(R.string.db_title));
+                        document.get(getString(R.string.db_description));
+                        document.get(getString(R.string.db_price));
                     }
                 }
             }
