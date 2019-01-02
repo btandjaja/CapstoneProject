@@ -256,7 +256,7 @@ public class SellActivity extends AppCompatActivity {
                                     mProgressBarItemUploading.setProgress(0);
                                 }
                             }, 500);
-                            // TODO firebaseStore db
+                            // TODO firebase Firestore db
                             fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
@@ -285,20 +285,6 @@ public class SellActivity extends AppCompatActivity {
                                                     Toast.makeText(SellActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                                                 }
                                             });
-//                                    Upload upload = new Upload(uploadInfo,
-//                                            downloadUrl,
-//                                            mItemTitle.getText().toString().trim(),
-//                                            mItemDescription.getText().toString().trim(),
-//                                            mUId,
-//                                            Double.valueOf(mPrice.getText().toString().replaceAll("[$,]","")));
-//                                    DatabaseReference ref = mDbReference.push();
-//                                    String uploadId = ref.getKey();
-//                                    if (uploadId != null) {
-////                                        mDbReference.child(uploadId).setValue(upload);
-//                                        mDbReference.setValue(upload);
-//                                        clearInput();
-//                                        Toast.makeText(SellActivity.this, "Listing complete!", Toast.LENGTH_LONG).show();
-//                                    }
                                 }
                             });
                         }
