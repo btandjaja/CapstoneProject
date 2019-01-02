@@ -29,22 +29,17 @@
                 android:textStyle="bold" />
         </androidx.appcompat.widget.Toolbar>
 
-        <androidx.core.widget.ContentLoadingProgressBar
-            android:id="@+id/pb_uploading_image"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!--<androidx.core.widget.ContentLoadingProgressBar-->
-        <!--android:id="@+id/pb_uploading_image"-->
-        <!--style="@style/Widget.AppCompat.ProgressBar.Horizontal"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:fitsSystemWindows="true"-->
-        <!--android:visibility="gone"-->
-        <!--app:layout_anchor="@id/app_bar"-->
-        <!--app:layout_anchorGravity="bottom" />-->
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/pb_uploading_image"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_anchorGravity="bottom"
+        app:layout_anchor="@id/app_bar"
+        android:elevation="4dp"
+        android:visibility="invisible"/>
 
     <include layout="@layout/content_sell" />
 

@@ -50,6 +50,7 @@
     <string name="no_camera_available">Device does not have camera</string>
     <string name="camera_operation_cancelled">Operation cancelled</string>
     <string name="concate_fileprovider">.fileprovider</string>
+    <string name="item_image">Item image</string>
 
     <string name="add_picture_or_camera_error">An error has occur</string>
 

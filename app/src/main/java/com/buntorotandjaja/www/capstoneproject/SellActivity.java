@@ -17,6 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
@@ -76,7 +77,7 @@ public class SellActivity extends AppCompatActivity {
     // Firebase
     private StorageReference mStorageReference;
     private FirebaseFirestore mFirestore;
-
+    private StorageTask mUploadTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,8 +87,6 @@ public class SellActivity extends AppCompatActivity {
         setupToolbar();
         mHasImage = false;
         meetPostingRequirement = false;
-        // TODO progressbar visibility
-//        mProgressBarItemUploading.setVisibility(View.GONE);
         // TODO needed when
         mStorageReference = FirebaseStorage.getInstance().getReference(getString(R.string.app_name));
         mFirestore = FirebaseFirestore.getInstance();
@@ -120,11 +119,12 @@ public class SellActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 checkEmptyViews();
-                if (meetPostingRequirement) {
-                    // TODO progress bar unable to hide
-//                    mProgressBarItemUploading.setVisibility(View.VISIBLE);
-                    uploadFile();
-//                    mProgressBarItemUploading.setVisibility(View.GONE);
+                if (mUploadTask != null && mUploadTask.isInProgress()) {
+                    Toast.makeText(SellActivity.this, "Uploading listing, please wait.", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (meetPostingRequirement) {
+                        uploadFile();
+                    }
                 }
             }
         });
@@ -239,13 +239,14 @@ public class SellActivity extends AppCompatActivity {
     // upload to firebaseDatabase and firebaseStorage (image)
     private void uploadFile() {
         if (mImageUri != null) {
+            mProgressBarItemUploading.setVisibility(View.VISIBLE);
             // TODO firebaseStorage
             final String uploadInfo = mUId + "_"
                     + mItemTitle.getText().toString().trim() + "_"
                     + System.currentTimeMillis()
                     + "." + getFileExtension(mImageUri);
             final StorageReference fileReference = mStorageReference.child(uploadInfo);
-            fileReference.putFile(mImageUri)
+            mUploadTask = fileReference.putFile(mImageUri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -277,12 +278,14 @@ public class SellActivity extends AppCompatActivity {
                                                 public void onSuccess(DocumentReference documentReference) {
                                                     clearInput();
                                                     Toast.makeText(SellActivity.this, "Listing complete!", Toast.LENGTH_LONG).show();
+                                                    mProgressBarItemUploading.setVisibility(View.INVISIBLE);
                                                 }
                                             })
                                             .addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
                                                     Toast.makeText(SellActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    mProgressBarItemUploading.setVisibility(View.INVISIBLE);
                                                 }
                                             });
                                 }

@@ -1,25 +1,41 @@
 package com.buntorotandjaja.www.capstoneproject;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+//import com.google.api.core.ApiFuture;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ItemListActivity extends AppCompatActivity {
 
     @BindView(R.id.tv_listing) TextView mTvListing;
     @BindView(R.id.tb_item_list) Toolbar mToolbar;
     @BindView(R.id.rv_item_list) RecyclerView mRecyclerView;
+
+    // Firebase Firestore
+    private FirebaseFirestore mFirestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +44,25 @@ public class ItemListActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         // TODO set toolbar
         setToolbar();
-        setRecyclerView();
+        // TODO read db
+        mFirestore = FirebaseFirestore.getInstance();
+        mFirestore.collection(getString(R.string.app_name))
+        .get()
+        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d("TAG", document.getId() + " " + document.getData());
+                    }
+                }
+            }
+        });
+
+        // TODO read images
+        // TODO create adapter
+        // createAdapter
+//        setRecyclerView();
     }
 
     private void setToolbar() {
@@ -39,6 +73,9 @@ public class ItemListActivity extends AppCompatActivity {
     }
 
     private void setRecyclerView() {
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        // TODO create adapter, setAdapter to recyclerView, need to get data first and extract data, past data
 
     }
 
