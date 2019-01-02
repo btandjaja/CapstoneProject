@@ -6,23 +6,17 @@ import android.widget.EditText;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.text.ParseException;
 
 public class DecimalCurrency implements TextWatcher {
 
     private final DecimalFormat df;
-    private final DecimalFormat dfnd;
     private final EditText et;
-    private boolean hasFractionalPart;
-    private int trailingZeroCount;
     private String current = "";
 
     public DecimalCurrency(EditText editText, String pattern) {
         df = new DecimalFormat(pattern);
         df.setDecimalSeparatorAlwaysShown(true);
-        dfnd = new DecimalFormat("#,###.00");
         this.et = editText;
-        hasFractionalPart = false;
     }
 
     @Override
