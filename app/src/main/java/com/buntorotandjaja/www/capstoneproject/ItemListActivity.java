@@ -2,6 +2,7 @@ package com.buntorotandjaja.www.capstoneproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -18,6 +19,7 @@ public class ItemListActivity extends AppCompatActivity {
 
     @BindView(R.id.tv_listing) TextView mTvListing;
     @BindView(R.id.tb_item_list) Toolbar mToolbar;
+    @BindView(R.id.rv_item_list) RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +28,6 @@ public class ItemListActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         // TODO set toolbar
         setToolbar();
-        // TODO used when user want to sell item
-//        String uid = getIntent().getStringExtra(getString(R.string.unique_id));
     }
 
     private void setToolbar() {
