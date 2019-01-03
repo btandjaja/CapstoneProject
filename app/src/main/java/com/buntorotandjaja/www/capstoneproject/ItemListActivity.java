@@ -37,6 +37,8 @@ public class ItemListActivity extends AppCompatActivity {
     // Firebase Firestore
     private FirebaseFirestore mFirestore;
 
+    private List<Upload> mItemList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +46,7 @@ public class ItemListActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         // TODO set toolbar
         setToolbar();
+        mItemList = new ArrayList<>();
         // TODO read db
         mFirestore = FirebaseFirestore.getInstance();
         mFirestore.collection(getString(R.string.app_name))
@@ -53,14 +56,19 @@ public class ItemListActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        document.get(getString(R.string.db_uploadInfo));
-                        document.get(getString(R.string.db_uid));
-                        document.get(getString(R.string.db_sold));
-                        document.get(getString(R.string.db_buyer));
-                        document.get(getString(R.string.db_downloadUrl));
-                        document.get(getString(R.string.db_title));
-                        document.get(getString(R.string.db_description));
-                        document.get(getString(R.string.db_price));
+                        String uploadInfo = (String) document.get(getString(R.string.db_uploadInfo));
+                        String sellerUId = (String) document.get(getString(R.string.db_uid));
+                        boolean sold =  Boolean.valueOf((String) document.get(getString(R.string.db_sold)));
+                        String buyerUId = (String) document.get(getString(R.string.db_buyer));
+                        String imageUri = (String) document.get(getString(R.string.db_downloadUrl));
+                        String title = (String) document.get(getString(R.string.db_title));
+                        String description = (String) document.get(getString(R.string.db_description));
+                        String price = (String) document.get(getString(R.string.db_price));
+                        Upload retrievedObject = new Upload(uploadInfo, imageUri, title, description,
+                                sellerUId, price);
+                        retrievedObject.setBuyerUId(buyerUId);
+                        retrievedObject.setSold(sold);
+                        mItemList.add(retrievedObject);
                     }
                 }
             }
