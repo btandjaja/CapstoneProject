@@ -1,11 +1,15 @@
 package com.buntorotandjaja.www.capstoneproject;
 
+import android.net.Uri;
+
+import com.google.android.gms.tasks.Task;
+
 public class Upload {
     private String mUploadInfo;
     private String mTitle;
     private String mDescription;
     private String mSellerUId;
-    private String mImageUri;
+    private String mImageUrl;
     private String mBuyerUId;
     private boolean mSold;
     private String mPrice;
@@ -13,13 +17,13 @@ public class Upload {
     // empty constructor required
     public Upload() {}
 
-    public Upload(String uploadInfo, String imageUri, String title,
+    public Upload(String uploadInfo, String imageUrl, String title,
                   String description, String sellerUId, String price) {
         if (uploadInfo.trim().equals("")) {
             uploadInfo = "Title required";
         }
         mUploadInfo = uploadInfo;
-        mImageUri = imageUri;
+        mImageUrl = imageUrl;
         mTitle = title;
         mDescription = description;
         mSellerUId = sellerUId;
@@ -29,7 +33,7 @@ public class Upload {
     }
     // setter
     public void setUploadInfo (String uploadInfo) { mUploadInfo = uploadInfo; }
-    public void setImageUri (String imageUri) { mImageUri = imageUri; }
+    public void setImageUrl (String imageUrl) { mImageUrl = imageUrl; }
     public void setTitle (String title) { mTitle = title; }
     public void setDescription (String description) { mDescription = description; }
     public void setSellerUId (String sellerUid) { mSellerUId = sellerUid; }
@@ -38,7 +42,7 @@ public class Upload {
     public void setBuyerUId (String buyerUId) { mBuyerUId = buyerUId; }
     // getter
     public String getUploadInfo () { return mUploadInfo; }
-    public String getImageUri () { return mImageUri; }
+    public String getImageUrl () { return mImageUrl; }
     public String getTitle () { return mTitle; }
     public String getDescription () { return mDescription; }
     public String getSellerUId () { return mSellerUId; }

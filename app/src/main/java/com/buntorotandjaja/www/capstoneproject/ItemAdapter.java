@@ -37,7 +37,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
     public void onBindViewHolder(@NonNull ItemViewHolder itemView, int position) {
         Upload singleItem = mItemList.get(position);
         if (singleItem == null) return;
-        itemView.mImageView.setImageURI(Uri.parse(singleItem.getImageUri()));
+        // TODO need to fix
+//        itemView.mImageView.setImageURI(Uri.parse(singleItem.getImageUri()));
         itemView.mItemTitle.setText(singleItem.getTitle());
         itemView.mItemTitle.setText(singleItem.getPrice());
     }

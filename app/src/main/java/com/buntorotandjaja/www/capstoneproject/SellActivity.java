@@ -58,15 +58,24 @@ public class SellActivity extends AppCompatActivity {
     private final static int PERMISSION_REQUEST_CODE = 3;
     private final static String TAG = SellActivity.class.getSimpleName();
 
-    @BindView(R.id.toolbar_sell_acitivty) Toolbar mToolbar;
-    @BindView(R.id.imageButton_take_picture) ImageButton mTakePicture;
-    @BindView(R.id.imageButton_upload_file) ImageButton mUploadPicture;
-    @BindView(R.id.item_image) ThreeTwoImageView mItemImage;
-    @BindView(R.id.et_item_title) EditText mItemTitle;
-    @BindView(R.id.et_item_description) EditText mItemDescription;
-    @BindView(R.id.et_item_price) EditText mPrice;
-    @BindView(R.id.button_sell) Button mSell;
-    @BindView(R.id.pb_uploading_image) ContentLoadingProgressBar mProgressBarItemUploading;
+    @BindView(R.id.toolbar_sell_acitivty)
+    Toolbar mToolbar;
+    @BindView(R.id.imageButton_take_picture)
+    ImageButton mTakePicture;
+    @BindView(R.id.imageButton_upload_file)
+    ImageButton mUploadPicture;
+    @BindView(R.id.item_image)
+    ThreeTwoImageView mItemImage;
+    @BindView(R.id.et_item_title)
+    EditText mItemTitle;
+    @BindView(R.id.et_item_description)
+    EditText mItemDescription;
+    @BindView(R.id.et_item_price)
+    EditText mPrice;
+    @BindView(R.id.button_sell)
+    Button mSell;
+    @BindView(R.id.pb_uploading_image)
+    ContentLoadingProgressBar mProgressBarItemUploading;
 
     private String mUId;
     private Uri mImageUri;
@@ -77,6 +86,7 @@ public class SellActivity extends AppCompatActivity {
     // Firebase
     private StorageReference mStorageReference;
     private FirebaseFirestore mFirestore;
+    private DatabaseReference mDbRef;
     private StorageTask mUploadTask;
 
     @Override
@@ -84,19 +94,14 @@ public class SellActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sell);
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("message");
-
-        myRef.setValue("Hello, World!");
-
         ButterKnife.bind(this);
         setupToolbar();
         mHasImage = false;
         meetPostingRequirement = false;
         // TODO needed when
         mStorageReference = FirebaseStorage.getInstance().getReference(getString(R.string.app_name));
+        mDbRef = FirebaseDatabase.getInstance().getReference(getString(R.string.app_name));
         mFirestore = FirebaseFirestore.getInstance();
-        mUId = FirebaseAuth.getInstance().getUid();
         mUploadPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,7 +134,11 @@ public class SellActivity extends AppCompatActivity {
                     Toast.makeText(SellActivity.this, "Uploading listing, please wait.", Toast.LENGTH_SHORT).show();
                 } else {
                     if (meetPostingRequirement) {
+                        // TODO get the UId before listing
+                        mUId = FirebaseAuth.getInstance().getUid();
                         uploadFile();
+                        // TODO remove UId for security purpose
+                        mUId = "";
                     }
                 }
             }
@@ -190,6 +199,7 @@ public class SellActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        mProgressBarItemUploading.setVisibility(View.VISIBLE);
         if (requestCode == PICK_IMAGE_REQUEST && data != null &&
                 data.getData() != null) {
             if (resultCode == RESULT_OK) {
@@ -213,6 +223,7 @@ public class SellActivity extends AppCompatActivity {
             Toast.makeText(this, getString(R.string.add_picture_or_camera_error), Toast.LENGTH_LONG).show();
             meetPostingRequirement = false;
         }
+        mProgressBarItemUploading.setVisibility(View.INVISIBLE);
     }
 
     // check for views before confirming to sell
@@ -245,10 +256,12 @@ public class SellActivity extends AppCompatActivity {
     // upload to firebaseDatabase and firebaseStorage (image)
     private void uploadFile() {
         if (mImageUri != null) {
-            mProgressBarItemUploading.setVisibility(View.VISIBLE);
+            final String title = mItemTitle.getText().toString().trim();
+            final String description = mItemDescription.getText().toString().trim();
+            final String price = mPrice.getText().toString().trim();
             // TODO firebaseStorage
             final String uploadInfo = mUId + "_"
-                    + mItemTitle.getText().toString().trim() + "_"
+                    + title + "_"
                     + System.currentTimeMillis()
                     + "." + getFileExtension(mImageUri);
             final StorageReference fileReference = mStorageReference.child(uploadInfo);
@@ -263,54 +276,73 @@ public class SellActivity extends AppCompatActivity {
                                     mProgressBarItemUploading.setProgress(0);
                                 }
                             }, 500);
-                            // TODO firebase Firestore db
-                            fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    final String downloadUrl = uri.toString();
-                                    Map<String, String> listing = new HashMap<>();
-                                    listing.put(getString(R.string.db_uploadInfo), uploadInfo);
-                                    listing.put(getString(R.string.db_uid), mUId);
-                                    listing.put(getString(R.string.db_sold), String.valueOf(false));
-                                    listing.put(getString(R.string.db_buyer), "");
-                                    listing.put(getString(R.string.db_downloadUrl), downloadUrl);
-                                    listing.put(getString(R.string.db_title), mItemTitle.getText().toString().trim());
-                                    listing.put(getString(R.string.db_description), mItemDescription.getText().toString().trim());
-                                    listing.put(getString(R.string.db_price), mPrice.getText().toString().replaceAll("[$,]",""));
-                                    mFirestore.collection(getString(R.string.app_name))
-                                            .add(listing)
-                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                                @Override
-                                                public void onSuccess(DocumentReference documentReference) {
-                                                    clearInput();
-                                                    Toast.makeText(SellActivity.this, "Listing complete!", Toast.LENGTH_LONG).show();
-                                                    mProgressBarItemUploading.setVisibility(View.INVISIBLE);
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Toast.makeText(SellActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                    mProgressBarItemUploading.setVisibility(View.INVISIBLE);
-                                                }
-                                            });
-                                }
-                            });
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = ( 100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                            mProgressBarItemUploading.setProgress((int)progress);
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(SellActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                            // TODO for firebase database
+                            Upload upload = new Upload(uploadInfo,
+                                    taskSnapshot.getStorage().getDownloadUrl().toString(),
+                                    title,
+                                    description,
+                                    mUId,
+                                    price);
+                            String uploadId = mDbRef.push().getKey();
+                            if (uploadId != null) {
+                                Toast.makeText(SellActivity.this, mUId, Toast.LENGTH_LONG).show();
+                                mDbRef.child(uploadId).setValue(upload);
+                                clearInput();
+                                Toast.makeText(SellActivity.this, "Upload succesful", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     });
+            // TODO firebase Database
+//                            fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                                @Override
+//                                public void onSuccess(Uri uri) {
+//
+//                                    // TODO for Firestore
+//                                    final String imageUri = uri.toString();
+//                                    Map<String, String> listing = new HashMap<>();
+//                                    listing.put(getString(R.string.db_uploadInfo), uploadInfo);
+//                                    listing.put(getString(R.string.db_uid), mUId);
+//                                    listing.put(getString(R.string.db_sold), String.valueOf(false));
+//                                    listing.put(getString(R.string.db_buyer), "");
+//                                    listing.put(getString(R.string.db_downloadUrl), imageUri);
+//                                    listing.put(getString(R.string.db_title), mItemTitle.getText().toString().trim());
+//                                    listing.put(getString(R.string.db_description), mItemDescription.getText().toString().trim());
+//                                    listing.put(getString(R.string.db_price), mPrice.getText().toString().replaceAll("[$,]",""));
+//                                    mFirestore.collection(getString(R.string.app_name))
+//                                            .add(listing)
+//                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+//                                                @Override
+//                                                public void onSuccess(DocumentReference documentReference) {
+//                                                    clearInput();
+//                                                    Toast.makeText(SellActivity.this, "Listing complete!", Toast.LENGTH_LONG).show();
+//                                                    mProgressBarItemUploading.setVisibility(View.INVISIBLE);
+//                                                }
+//                                            })
+//                                            .addOnFailureListener(new OnFailureListener() {
+//                                                @Override
+//                                                public void onFailure(@NonNull Exception e) {
+//                                                    Toast.makeText(SellActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+//                                                    mProgressBarItemUploading.setVisibility(View.INVISIBLE);
+//                                                }
+//                                            });
+//                                }
+//                            });
+//                        }
+//                    })
+//                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+//                        @Override
+//                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+//                            double progress = ( 100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+//                            mProgressBarItemUploading.setProgress((int)progress);
+//                        }
+//                    })
+//                    .addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception e) {
+//                            Toast.makeText(SellActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
         } else {
             Toast.makeText(this, "No image selected", Toast.LENGTH_LONG).show();
         }
