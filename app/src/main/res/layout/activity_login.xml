@@ -31,24 +31,24 @@
             android:src="@drawable/garage_sale_logo_1" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!--<include-->
-        <!--android:id="@+id/progressbar_holder"-->
-        <!--layout="@layout/sign_in_progress"-->
-        <!--android:visibility="invisible"/>-->
-    <FrameLayout
-        android:id="@+id/fl_pb_holder_login"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#9E9E9E"
-        android:layout_gravity="center_vertical"
-        android:visibility="invisible">
+    <include
+        android:id="@+id/progressbar_holder"
+        layout="@layout/sign_in_progress"
+        android:visibility="invisible"/>
+    <!--<FrameLayout-->
+        <!--android:id="@+id/fl_pb_holder_login"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="#9E9E9E"-->
+        <!--android:layout_gravity="center_vertical"-->
+        <!--android:visibility="invisible">-->
 
-        <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-    </FrameLayout>
+        <!--<ProgressBar-->
+            <!--style="?android:attr/progressBarStyleLarge"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center" />-->
+    <!--</FrameLayout>-->
 
     <ScrollView
         android:id="@+id/login_form"
