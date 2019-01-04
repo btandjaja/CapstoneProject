@@ -7,8 +7,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -263,9 +266,11 @@ public class SellActivity extends AppCompatActivity {
                                 }
                             }, 500);
 
+                            Task<Uri> imageUri = taskSnapshot.getStorage().getDownloadUrl();
+                            while (!imageUri.isComplete());
                             // TODO for firebase database
                             Upload upload = new Upload(uploadInfo,
-                                    taskSnapshot.getStorage().getDownloadUrl().toString(),
+                                    imageUri.getResult().toString(),
                                     title,
                                     description,
                                     mUId,
