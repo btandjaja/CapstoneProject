@@ -12,8 +12,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-//import com.google.firebase.firestore.DocumentReference;
-//import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -48,8 +46,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class SellActivity extends AppCompatActivity {
 
@@ -58,18 +54,12 @@ public class SellActivity extends AppCompatActivity {
     private final static int PERMISSION_REQUEST_CODE = 3;
     private final static String TAG = SellActivity.class.getSimpleName();
 
-    @BindView(R.id.toolbar_sell_acitivty)
-    Toolbar mToolbar;
-    @BindView(R.id.imageButton_take_picture)
-    ImageButton mTakePicture;
-    @BindView(R.id.imageButton_upload_file)
-    ImageButton mUploadPicture;
-    @BindView(R.id.item_image)
-    ThreeTwoImageView mItemImage;
-    @BindView(R.id.et_item_title)
-    EditText mItemTitle;
-    @BindView(R.id.et_item_description)
-    EditText mItemDescription;
+    @BindView(R.id.toolbar_sell_acitivty) Toolbar mToolbar;
+    @BindView(R.id.imageButton_take_picture) ImageButton mTakePicture;
+    @BindView(R.id.imageButton_upload_file) ImageButton mUploadPicture;
+    @BindView(R.id.item_image) ThreeTwoImageView mItemImage;
+    @BindView(R.id.et_item_title) EditText mItemTitle;
+    @BindView(R.id.et_item_description) EditText mItemDescription;
     @BindView(R.id.et_item_price) EditText mPrice;
     @BindView(R.id.button_sell) Button mSell;
     @BindView(R.id.pb_uploading_image)
@@ -83,7 +73,6 @@ public class SellActivity extends AppCompatActivity {
 
     // Firebase
     private StorageReference mStorageReference;
-//    private FirebaseFirestore mFirestore;
     private DatabaseReference mDbRef;
     private StorageTask mUploadTask;
 
@@ -99,7 +88,6 @@ public class SellActivity extends AppCompatActivity {
         // TODO needed when
         mStorageReference = FirebaseStorage.getInstance().getReference(getString(R.string.app_name));
         mDbRef = FirebaseDatabase.getInstance().getReference(getString(R.string.app_name));
-//        mFirestore = FirebaseFirestore.getInstance();
         mUploadPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,7 +120,6 @@ public class SellActivity extends AppCompatActivity {
                     Toast.makeText(SellActivity.this, "Uploading listing, please wait.", Toast.LENGTH_SHORT).show();
                 } else {
                     if (meetPostingRequirement) {
-                        mProgressBarItemUploading.setVisibility(View.VISIBLE);
                         // TODO get the UId before listing
                         mUId = FirebaseAuth.getInstance().getUid();
                         uploadFile();
@@ -254,6 +241,7 @@ public class SellActivity extends AppCompatActivity {
     // upload to firebaseDatabase and firebaseStorage (image)
     private void uploadFile() {
         if (mImageUri != null) {
+            mProgressBarItemUploading.setVisibility(View.VISIBLE);
             final String title = mItemTitle.getText().toString().trim();
             final String description = mItemDescription.getText().toString().trim();
             final String price = mPrice.getText().toString().trim();
@@ -272,8 +260,6 @@ public class SellActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     mProgressBarItemUploading.setProgress(0);
-                                    // TODO hide progress bar
-                                    mProgressBarItemUploading.setVisibility(View.INVISIBLE);
                                 }
                             }, 500);
 
@@ -286,7 +272,8 @@ public class SellActivity extends AppCompatActivity {
                                     price);
                             String uploadId = mDbRef.push().getKey();
                             if (uploadId != null) {
-                                Toast.makeText(SellActivity.this, mUId, Toast.LENGTH_LONG).show();
+                                // TODO hide progress bar
+                                mProgressBarItemUploading.setVisibility(View.INVISIBLE);
                                 mDbRef.child(uploadId).setValue(upload);
                                 clearInput();
                                 Toast.makeText(SellActivity.this, "Upload succesful", Toast.LENGTH_SHORT).show();
