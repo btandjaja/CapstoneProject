@@ -7,8 +7,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -300,56 +298,6 @@ public class SellActivity extends AppCompatActivity {
                             Toast.makeText(SellActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
-            // TODO firebase Database
-//                            fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                                @Override
-//                                public void onSuccess(Uri uri) {
-//
-//                                    // TODO for Firestore
-//                                    final String imageUri = uri.toString();
-//                                    Map<String, String> listing = new HashMap<>();
-//                                    listing.put(getString(R.string.db_uploadInfo), uploadInfo);
-//                                    listing.put(getString(R.string.db_uid), mUId);
-//                                    listing.put(getString(R.string.db_sold), String.valueOf(false));
-//                                    listing.put(getString(R.string.db_buyer), "");
-//                                    listing.put(getString(R.string.db_downloadUrl), imageUri);
-//                                    listing.put(getString(R.string.db_title), mItemTitle.getText().toString().trim());
-//                                    listing.put(getString(R.string.db_description), mItemDescription.getText().toString().trim());
-//                                    listing.put(getString(R.string.db_price), mPrice.getText().toString().replaceAll("[$,]",""));
-//                                    mFirestore.collection(getString(R.string.app_name))
-//                                            .add(listing)
-//                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                                                @Override
-//                                                public void onSuccess(DocumentReference documentReference) {
-//                                                    clearInput();
-//                                                    Toast.makeText(SellActivity.this, "Listing complete!", Toast.LENGTH_LONG).show();
-//                                                    mProgressBarItemUploading.setVisibility(View.INVISIBLE);
-//                                                }
-//                                            })
-//                                            .addOnFailureListener(new OnFailureListener() {
-//                                                @Override
-//                                                public void onFailure(@NonNull Exception e) {
-//                                                    Toast.makeText(SellActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-//                                                    mProgressBarItemUploading.setVisibility(View.INVISIBLE);
-//                                                }
-//                                            });
-//                                }
-//                            });
-//                        }
-//                    })
-//                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-//                        @Override
-//                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-//                            double progress = ( 100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-//                            mProgressBarItemUploading.setProgress((int)progress);
-//                        }
-//                    })
-//                    .addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception e) {
-//                            Toast.makeText(SellActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
         } else {
             Toast.makeText(this, "No image selected", Toast.LENGTH_LONG).show();
         }
