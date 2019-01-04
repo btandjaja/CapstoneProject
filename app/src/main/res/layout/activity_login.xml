@@ -32,7 +32,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <include
-        android:id="@+id/progressbar_holder"
+        android:id="@+id/progressbar_holder_login"
         layout="@layout/sign_in_progress"
         android:visibility="invisible"/>
     <!--<FrameLayout-->

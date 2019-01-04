@@ -25,7 +25,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,11 +44,9 @@ public class RegisterActivity extends AppCompatActivity {
     @BindView(R.id.email) AutoCompleteTextView mEmailView;
     @BindView(R.id.password) EditText mPasswordView;
     @BindView(R.id.password_confirm) EditText mPasswordConfirmView;
-    @BindView(R.id.login_progress) View mProgressView;
-    @BindView(R.id.login_form) View mLoginFormView;
     @BindView(R.id.email_register_button) Button mEmailRegisterButton;
     @BindView(R.id.tb_register) Toolbar mToolbar;
-//    @BindView(R.id.fl_progressbar_holder) FrameLayout mFrameLayoutPbHolder;
+    @BindView(R.id.progressbar_holder_register) View mProgressbarHolder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +110,7 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
         // TODO change pb
-//        mFrameLayoutPbHolder.setVisibility(View.VISIBLE);
+        mProgressbarHolder.setVisibility(View.VISIBLE);
 
         // Reset errors.
         mEmailView.setError(null);
@@ -156,6 +153,7 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            mProgressbarHolder.setVisibility(View.INVISIBLE);
                             // sign in success, update UI with the signed-in user's information
                             Log.d(this.getClass().getSimpleName(), "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
@@ -164,14 +162,13 @@ public class RegisterActivity extends AppCompatActivity {
                         } else {
                             // TODO collusion exception
                             if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                                mProgressbarHolder.setVisibility(View.INVISIBLE);
                                 Toast.makeText(RegisterActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                 return;
                             }
                         }
                     }
                 });
-        // TODO change pb
-//        mFrameLayoutPbHolder.setVisibility(View.INVISIBLE);
     }
 
     private boolean isEmailValid(String email) {

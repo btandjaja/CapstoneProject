@@ -37,10 +37,9 @@ public class LoginActivity extends AppCompatActivity {
     // UI references.
     @BindView(R.id.email) AutoCompleteTextView mEmailView;
     @BindView(R.id.password) EditText mPasswordView;
-    @BindView(R.id.login_form) View mLoginFormView;
     @BindView(R.id.register) Button mRegister;
     @BindView(R.id.email_sign_in_button) Button mEmailSignInButton;
-    @BindView(R.id.progressbar_holder) View mProgressBarHolder;
+    @BindView(R.id.progressbar_holder_login) View mProgressBarHolder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

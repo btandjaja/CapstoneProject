@@ -70,10 +70,8 @@ public class SellActivity extends AppCompatActivity {
     EditText mItemTitle;
     @BindView(R.id.et_item_description)
     EditText mItemDescription;
-    @BindView(R.id.et_item_price)
-    EditText mPrice;
-    @BindView(R.id.button_sell)
-    Button mSell;
+    @BindView(R.id.et_item_price) EditText mPrice;
+    @BindView(R.id.button_sell) Button mSell;
     @BindView(R.id.pb_uploading_image)
     ContentLoadingProgressBar mProgressBarItemUploading;
 
@@ -134,6 +132,7 @@ public class SellActivity extends AppCompatActivity {
                     Toast.makeText(SellActivity.this, "Uploading listing, please wait.", Toast.LENGTH_SHORT).show();
                 } else {
                     if (meetPostingRequirement) {
+                        mProgressBarItemUploading.setVisibility(View.VISIBLE);
                         // TODO get the UId before listing
                         mUId = FirebaseAuth.getInstance().getUid();
                         uploadFile();
@@ -254,7 +253,6 @@ public class SellActivity extends AppCompatActivity {
 
     // upload to firebaseDatabase and firebaseStorage (image)
     private void uploadFile() {
-        mProgressBarItemUploading.setVisibility(View.VISIBLE);
         if (mImageUri != null) {
             final String title = mItemTitle.getText().toString().trim();
             final String description = mItemDescription.getText().toString().trim();
@@ -274,6 +272,8 @@ public class SellActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     mProgressBarItemUploading.setProgress(0);
+                                    // TODO hide progress bar
+                                    mProgressBarItemUploading.setVisibility(View.INVISIBLE);
                                 }
                             }, 500);
 
@@ -303,6 +303,8 @@ public class SellActivity extends AppCompatActivity {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
+                            // TODO hide progress bar
+                            mProgressBarItemUploading.setVisibility(View.INVISIBLE);
                             Toast.makeText(SellActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -359,7 +361,6 @@ public class SellActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "No image selected", Toast.LENGTH_LONG).show();
         }
-        mProgressBarItemUploading.setVisibility(View.INVISIBLE);
     }
 
     private void operationCancelled() {

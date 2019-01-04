@@ -34,6 +34,7 @@ public class ItemListActivity extends AppCompatActivity {
     @BindView(R.id.tb_item_list) Toolbar mToolbar;
     @BindView(R.id.rv_item_list) RecyclerView mRecyclerView;
 
+
     private List<Upload> mItemList;
 
     @Override

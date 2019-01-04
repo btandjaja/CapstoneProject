@@ -27,7 +27,7 @@ public class Upload {
         mTitle = title;
         mDescription = description;
         mSellerUId = sellerUId;
-        mPrice = "$" + price;
+        mPrice = price;
         mSold = false;
         mBuyerUId = "";
     }
