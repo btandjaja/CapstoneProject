@@ -118,7 +118,7 @@ public class SellActivity extends AppCompatActivity {
             public void onClick(View v) {
                 checkEmptyViews();
                 if (mUploadTask != null && mUploadTask.isInProgress()) {
-                    Toast.makeText(SellActivity.this, "Uploading listing, please wait.", Toast.LENGTH_SHORT).show();
+                    uploadingInProgress();
                 } else {
                     if (meetPostingRequirement) {
                         // TODO get the UId before listing
@@ -242,7 +242,7 @@ public class SellActivity extends AppCompatActivity {
     // upload to firebaseDatabase and firebaseStorage (image)
     private void uploadFile() {
         if (mImageUri != null) {
-            mProgressBarItemUploading.setVisibility(View.VISIBLE);
+            showIndicator();
             final String title = mItemTitle.getText().toString().trim();
             final String description = mItemDescription.getText().toString().trim();
             final String price = mPrice.getText().toString().trim();
@@ -275,11 +275,10 @@ public class SellActivity extends AppCompatActivity {
                                     price);
                             String uploadId = mDbRef.push().getKey();
                             if (uploadId != null) {
-                                // TODO hide progress bar
-                                mProgressBarItemUploading.setVisibility(View.INVISIBLE);
                                 mDbRef.child(uploadId).setValue(upload);
                                 clearInput();
-                                Toast.makeText(SellActivity.this, "Upload succesful", Toast.LENGTH_SHORT).show();
+                                uploadSuccessful();
+                                hideIndicator();
                             }
                         }
                     })
@@ -299,8 +298,18 @@ public class SellActivity extends AppCompatActivity {
                         }
                     });
         } else {
-            Toast.makeText(this, "No image selected", Toast.LENGTH_LONG).show();
+            noImageSelected();
         }
+    }
+
+    private void showIndicator() {
+        getSupportActionBar().setHomeButtonEnabled(false);
+        mProgressBarItemUploading.setVisibility(View.VISIBLE);
+    }
+
+    private void hideIndicator() {
+        getSupportActionBar().setHomeButtonEnabled(true);
+        mProgressBarItemUploading.setVisibility(View.INVISIBLE);
     }
 
     private void operationCancelled() {
@@ -320,6 +329,11 @@ public class SellActivity extends AppCompatActivity {
                 // TODO delete all fields
                 clearInput();
                 return true;
+            case android.R.id.home:
+                if (mUploadTask != null && mUploadTask.isInProgress()) {
+                    uploadingInProgress();
+                }
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -332,5 +346,17 @@ public class SellActivity extends AppCompatActivity {
         mPrice.setText("0");
         mHasImage = false;
         meetPostingRequirement = false;
+    }
+
+    private void uploadingInProgress() {
+        Toast.makeText(SellActivity.this, "Uploading in progress, please wait", Toast.LENGTH_SHORT).show();
+    }
+
+    private void noImageSelected() {
+        Toast.makeText(this, "No image selected", Toast.LENGTH_LONG).show();
+    }
+
+    private void uploadSuccessful() {
+        Toast.makeText(SellActivity.this, "Upload succesful", Toast.LENGTH_SHORT).show();
     }
 }
