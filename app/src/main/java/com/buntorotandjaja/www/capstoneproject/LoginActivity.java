@@ -21,6 +21,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,10 +38,10 @@ public class LoginActivity extends AppCompatActivity {
     // UI references.
     @BindView(R.id.email) AutoCompleteTextView mEmailView;
     @BindView(R.id.password) EditText mPasswordView;
-    @BindView(R.id.login_progress) View mProgressView;
     @BindView(R.id.login_form) View mLoginFormView;
     @BindView(R.id.register) Button mRegister;
     @BindView(R.id.email_sign_in_button) Button mEmailSignInButton;
+    @BindView(R.id.fl_pb_holder_login) FrameLayout mFrameLayoutPbHolder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +95,8 @@ public class LoginActivity extends AppCompatActivity {
         if (mAuth == null) {
             return;
         }
-
+        // TODO show progress bar visibility
+        mFrameLayoutPbHolder.setVisibility(View.VISIBLE);
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
@@ -127,9 +129,13 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            // TODO remove progress bar visibility
+                            mFrameLayoutPbHolder.setVisibility(View.INVISIBLE);
                             Intent intent = new Intent(LoginActivity.this, ItemListActivity.class);
                             startActivity(intent);
                         } else {
+                            // TODO remove progress bar visibility
+                            mFrameLayoutPbHolder.setVisibility(View.INVISIBLE);
                             // show error
                             Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }

@@ -25,6 +25,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +49,7 @@ public class RegisterActivity extends AppCompatActivity {
     @BindView(R.id.login_form) View mLoginFormView;
     @BindView(R.id.email_register_button) Button mEmailRegisterButton;
     @BindView(R.id.tb_register) Toolbar mToolbar;
+//    @BindView(R.id.fl_progressbar_holder) FrameLayout mFrameLayoutPbHolder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +112,8 @@ public class RegisterActivity extends AppCompatActivity {
         if (mAuth == null) {
             return;
         }
+        // TODO change pb
+//        mFrameLayoutPbHolder.setVisibility(View.VISIBLE);
 
         // Reset errors.
         mEmailView.setError(null);
@@ -166,6 +170,8 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                     }
                 });
+        // TODO change pb
+//        mFrameLayoutPbHolder.setVisibility(View.INVISIBLE);
     }
 
     private boolean isEmailValid(String email) {

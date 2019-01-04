@@ -12,8 +12,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
+//import com.google.firebase.firestore.DocumentReference;
+//import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -85,7 +85,7 @@ public class SellActivity extends AppCompatActivity {
 
     // Firebase
     private StorageReference mStorageReference;
-    private FirebaseFirestore mFirestore;
+//    private FirebaseFirestore mFirestore;
     private DatabaseReference mDbRef;
     private StorageTask mUploadTask;
 
@@ -101,7 +101,7 @@ public class SellActivity extends AppCompatActivity {
         // TODO needed when
         mStorageReference = FirebaseStorage.getInstance().getReference(getString(R.string.app_name));
         mDbRef = FirebaseDatabase.getInstance().getReference(getString(R.string.app_name));
-        mFirestore = FirebaseFirestore.getInstance();
+//        mFirestore = FirebaseFirestore.getInstance();
         mUploadPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -199,7 +199,7 @@ public class SellActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mProgressBarItemUploading.setVisibility(View.VISIBLE);
+
         if (requestCode == PICK_IMAGE_REQUEST && data != null &&
                 data.getData() != null) {
             if (resultCode == RESULT_OK) {
@@ -223,7 +223,6 @@ public class SellActivity extends AppCompatActivity {
             Toast.makeText(this, getString(R.string.add_picture_or_camera_error), Toast.LENGTH_LONG).show();
             meetPostingRequirement = false;
         }
-        mProgressBarItemUploading.setVisibility(View.INVISIBLE);
     }
 
     // check for views before confirming to sell
@@ -255,6 +254,7 @@ public class SellActivity extends AppCompatActivity {
 
     // upload to firebaseDatabase and firebaseStorage (image)
     private void uploadFile() {
+        mProgressBarItemUploading.setVisibility(View.VISIBLE);
         if (mImageUri != null) {
             final String title = mItemTitle.getText().toString().trim();
             final String description = mItemDescription.getText().toString().trim();
@@ -291,6 +291,19 @@ public class SellActivity extends AppCompatActivity {
                                 clearInput();
                                 Toast.makeText(SellActivity.this, "Upload succesful", Toast.LENGTH_SHORT).show();
                             }
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                            mProgressBarItemUploading.setProgress((int) progress);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(SellActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
             // TODO firebase Database
@@ -346,6 +359,7 @@ public class SellActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "No image selected", Toast.LENGTH_LONG).show();
         }
+        mProgressBarItemUploading.setVisibility(View.INVISIBLE);
     }
 
     private void operationCancelled() {

@@ -112,4 +112,7 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <include layout="@layout/sign_in_progress" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

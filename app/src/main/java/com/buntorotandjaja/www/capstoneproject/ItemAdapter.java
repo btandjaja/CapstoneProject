@@ -38,7 +38,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         Upload singleItem = mItemList.get(position);
         if (singleItem == null) return;
         // TODO need to fix
-//        itemView.mImageView.setImageURI(Uri.parse(singleItem.getImageUri()));
+        itemView.mImageView.setImageURI(Uri.parse(singleItem.getImageUrl()));
         itemView.mItemTitle.setText(singleItem.getTitle());
         itemView.mItemTitle.setText(singleItem.getPrice());
     }
@@ -59,7 +59,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
     }
 
     /* view holder */
-    public class ItemViewHolder extends RecyclerView.ViewHolder {
+    public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.iv_itemlist_image) ThreeTwoImageView mImageView;
         @BindView(R.id.tv_itemListing_itemName) TextView mItemTitle;
         @BindView(R.id.tv_itemListing_itemPrice) TextView mItemPrice;
@@ -68,8 +68,14 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             super(itemView);
             ButterKnife.bind(this, itemView);
             // TODO onclicklistener not working
-//            itemView.setOnClickListener(this);
+            itemView.setOnClickListener(this);
         }
 
+        @Override
+        public void onClick(View v) {
+            Upload uploadData = mItemList.get(getAdapterPosition());
+            if (uploadData == null) return;
+            mOnClickHandler.OnItemClickListener(uploadData);
+        }
     }
 }

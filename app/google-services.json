@@ -1,27 +1,35 @@
 {
   "project_info": {
-    "project_number": "505895129869",
-    "firebase_url": "https://capstoneproject-57566.firebaseio.com",
-    "project_id": "capstoneproject-57566",
-    "storage_bucket": "capstoneproject-57566.appspot.com"
+    "project_number": "590476354254",
+    "firebase_url": "https://capstoneproject-82e94.firebaseio.com",
+    "project_id": "capstoneproject-82e94",
+    "storage_bucket": "capstoneproject-82e94.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:505895129869:android:dc2ad555cb3d0099",
+        "mobilesdk_app_id": "1:590476354254:android:dc2ad555cb3d0099",
         "android_client_info": {
           "package_name": "com.buntorotandjaja.www.capstoneproject"
         }
       },
       "oauth_client": [
         {
-          "client_id": "505895129869-rcbvs8lehnfgq3lc8va17i400h6dcah1.apps.googleusercontent.com",
+          "client_id": "590476354254-rshlq4q43id1udntpr4cus6es7s8ljro.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.buntorotandjaja.www.capstoneproject",
+            "certificate_hash": "57d88186fa339f2fe85e71524108bf5afad3a1a5"
+          }
+        },
+        {
+          "client_id": "590476354254-83u5mtrvdm5ef10nnamupn9rdoj5hfjn.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBF5W-GEOy9AvHCe0WKoDoD7qbpSxLIBbA"
+          "current_key": "AIzaSyBDxci168firSdIqElQMM_FrubrM-gL6FI"
         }
       ],
       "services": {
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "590476354254-83u5mtrvdm5ef10nnamupn9rdoj5hfjn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2
