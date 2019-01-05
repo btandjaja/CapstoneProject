@@ -44,34 +44,6 @@ public class ItemListActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         // TODO set toolbar
         setToolbar();
-        mItemList = new ArrayList<>();
-        // TODO read db
-//        mFirestore = FirebaseFirestore.getInstance();
-//        mFirestore.collection(getString(R.string.app_name))
-//        .get()
-//        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                // TODO need to fix
-//                if (task.isSuccessful()) {
-//                    for (QueryDocumentSnapshot document : task.getResult()) {
-//                        String uploadInfo = (String) document.get(getString(R.string.db_uploadInfo));
-//                        String sellerUId = (String) document.get(getString(R.string.db_uid));
-//                        boolean sold =  Boolean.valueOf((String) document.get(getString(R.string.db_sold)));
-//                        String buyerUId = (String) document.get(getString(R.string.db_buyer));
-//                        String imageUri = (String) document.get(getString(R.string.db_downloadUrl));
-//                        String title = (String) document.get(getString(R.string.db_title));
-//                        String description = (String) document.get(getString(R.string.db_description));
-//                        String price = (String) document.get(getString(R.string.db_price));
-//                        Upload retrievedObject = new Upload(uploadInfo, imageUri, title, description,
-//                                sellerUId, price);
-//                        retrievedObject.setBuyerUId(buyerUId);
-//                        retrievedObject.setSold(sold);
-//                        mItemList.add(retrievedObject);
-//                    }
-//                }
-//            }
-//        });
 
         // TODO read images
         // TODO create adapter

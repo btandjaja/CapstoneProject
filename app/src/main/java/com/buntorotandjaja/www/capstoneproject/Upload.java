@@ -1,10 +1,39 @@
 package com.buntorotandjaja.www.capstoneproject;
 
-import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-import com.google.android.gms.tasks.Task;
+public class Upload implements Parcelable{
 
-public class Upload {
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        @Override
+        public Object createFromParcel(Parcel parcel) {
+            return new Upload(parcel);
+        }
+
+        @Override
+        public Object[] newArray(int size) {
+            return new Upload[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mUploadInfo);
+        dest.writeString(mTitle);
+        dest.writeString(mDescription);
+        dest.writeString(mSellerUId);
+        dest.writeString(mImageUrl);
+        dest.writeString(mBuyerUId);
+        dest.writeString(mPrice);
+        dest.writeByte((byte) (mSold ? 1: 0));
+    }
+
     private String mUploadInfo;
     private String mTitle;
     private String mDescription;
@@ -16,6 +45,17 @@ public class Upload {
 
     // empty constructor required
     public Upload() {}
+
+    public Upload(Parcel in) {
+        mUploadInfo = in.readString();
+        mTitle = in.readString();
+        mDescription = in.readString();
+        mSellerUId = in.readString();
+        mImageUrl = in.readString();
+        mBuyerUId = in.readString();
+        mPrice = in.readString();
+        mSold = in.readByte() != 0;
+    }
 
     public Upload(String uploadInfo, String imageUrl, String title,
                   String description, String sellerUId, String price) {
