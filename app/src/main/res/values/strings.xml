@@ -30,6 +30,8 @@
 
     <!-- title -->
     <string name="title_activity_register">Register</string>
+    <string name="title_activity_listing">Item On Sale!</string>
+    <string name="title_item_detail_activity">Item Detail</string>
 
     <string name="unique_id">USER_SPECIFIC_ID</string>
 

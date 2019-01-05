@@ -1,20 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
-
-    <!-- Login progress -->
-    <!--<ProgressBar-->
-    <!--android:id="@+id/login_progress"-->
-    <!--style="?android:attr/progressBarStyleLarge"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_gravity="center"-->
-    <!--android:layout_marginBottom="8dp"-->
-    <!--android:visibility="visible" />-->
 
     <com.google.android.material.appbar.AppBarLayout
         style="@style/AppTheme"
@@ -35,20 +24,6 @@
         android:id="@+id/progressbar_holder_login"
         layout="@layout/sign_in_progress"
         android:visibility="invisible"/>
-    <!--<FrameLayout-->
-        <!--android:id="@+id/fl_pb_holder_login"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:background="#9E9E9E"-->
-        <!--android:layout_gravity="center_vertical"-->
-        <!--android:visibility="invisible">-->
-
-        <!--<ProgressBar-->
-            <!--style="?android:attr/progressBarStyleLarge"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center" />-->
-    <!--</FrameLayout>-->
 
     <ScrollView
         android:id="@+id/login_form"

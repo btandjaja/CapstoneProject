@@ -10,15 +10,13 @@ import butterknife.ButterKnife;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.PersistableBundle;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,8 +25,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class ItemListActivity extends AppCompatActivity implements ItemAdapter.ItemAdapterOnClickHandler {
 
@@ -37,7 +33,7 @@ public class ItemListActivity extends AppCompatActivity implements ItemAdapter.I
     @BindView(R.id.rv_item_list) RecyclerView mRecyclerView;
 
     private DatabaseReference mDbRef;
-    private List<Upload> mItemList;
+    private ArrayList<Upload> mItemList;
     private ItemAdapter mItemAdapter;
 
     @Override
@@ -139,7 +135,6 @@ public class ItemListActivity extends AppCompatActivity implements ItemAdapter.I
     @Override
     public void onBackPressed() {
         logout();
-        // TODO need?
         super.onBackPressed();
     }
 
@@ -152,6 +147,14 @@ public class ItemListActivity extends AppCompatActivity implements ItemAdapter.I
 
     @Override
     public void OnItemClickListener(Upload eachItem) {
-        Toast.makeText(this, "hello", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, ItemDetailActivity.class);
+        intent.putExtra(Upload.DISPLAY_ITEM_STRING, eachItem);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        outState.putParcelableArrayList(Upload.DISPLAY_ITEM_STRING, mItemList);
     }
 }

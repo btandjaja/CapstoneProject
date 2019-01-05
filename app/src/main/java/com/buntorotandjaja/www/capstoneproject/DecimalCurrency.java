@@ -29,19 +29,19 @@ public class DecimalCurrency implements TextWatcher {
 
     @Override
     public void afterTextChanged(Editable s) {
-        if(!s.toString().equals(current)){
-       et.removeTextChangedListener(this);
+        if (!s.toString().equals(current)) {
+            et.removeTextChangedListener(this);
 
             String cleanString = s.toString().replaceAll("[$,.]", "");
 
             double parsed = Double.parseDouble(cleanString);
-            String formatted = NumberFormat.getCurrencyInstance().format((parsed/100));
+            String formatted = NumberFormat.getCurrencyInstance().format((parsed / 100));
 
             current = formatted;
-       et.setText(formatted);
-       et.setSelection(formatted.length());
+            et.setText(formatted);
+            et.setSelection(formatted.length());
 
-       et.addTextChangedListener(this);
+            et.addTextChangedListener(this);
         }
     }
 }
