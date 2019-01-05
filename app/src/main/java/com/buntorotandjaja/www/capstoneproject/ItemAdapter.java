@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,9 +40,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         Upload singleItem = mItemList.get(position);
         if (singleItem == null) return;
         // TODO need to fix
-        itemView.mImageView.setImageURI(Uri.parse(singleItem.getImageUrl()));
+        Uri imageUri = Uri.parse(singleItem.getImageUrl());
+        Picasso.get().load(imageUri).fit().centerCrop().into(itemView.mImageView);
         itemView.mItemTitle.setText(singleItem.getTitle());
-        itemView.mItemTitle.setText(singleItem.getPrice());
+        itemView.mItemPrice.setText(singleItem.getPrice());
     }
 
     @Override
@@ -48,7 +51,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         return mItemList == null ? 0 : mItemList.size();
     }
 
-    public void setItemList(Context context, ArrayList<Upload> itemList) {
+    public void setItemList(Context context, List<Upload> itemList) {
         mContext = context;
         mItemList = itemList;
         notifyDataSetChanged();

@@ -34,6 +34,7 @@ public class Upload implements Parcelable{
         dest.writeByte((byte) (mSold ? 1: 0));
     }
 
+    private static final String DISPLAY_ITEM_STRING = "display item string";
     private String mUploadInfo;
     private String mTitle;
     private String mDescription;

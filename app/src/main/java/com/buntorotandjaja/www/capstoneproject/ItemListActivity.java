@@ -15,27 +15,30 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
-//import com.google.api.core.ApiFuture;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-//import com.google.firebase.firestore.FirebaseFirestore;
-//import com.google.firebase.firestore.QueryDocumentSnapshot;
-//import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ItemListActivity extends AppCompatActivity {
+public class ItemListActivity extends AppCompatActivity implements ItemAdapter.ItemAdapterOnClickHandler {
 
     @BindView(R.id.tv_listing) TextView mTvListing;
     @BindView(R.id.tb_item_list) Toolbar mToolbar;
     @BindView(R.id.rv_item_list) RecyclerView mRecyclerView;
 
-
+    private DatabaseReference mDbRef;
     private List<Upload> mItemList;
+    private ItemAdapter mItemAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +47,15 @@ public class ItemListActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         // TODO set toolbar
         setToolbar();
-
-        // TODO read images
+        // TODO instantiate item list
+        initializeItemList();
         // TODO create adapter
-        // createAdapter
-//        setRecyclerView();
+         createAdapter();
+        // TODO prepare recyclerView
+        setRecyclerView();
+        // TODO get data from firebase
+        createDbReference();
+        extractData();
     }
 
     private void setToolbar() {
@@ -58,11 +65,37 @@ public class ItemListActivity extends AppCompatActivity {
         mTvListing.setText(getString(R.string.app_name));
     }
 
+    private void createDbReference() { mDbRef = FirebaseDatabase.getInstance().getReference(getString(R.string.app_name)); }
+
+    private void extractData() {
+        mDbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    mItemList.add(postSnapshot.getValue(Upload.class));
+                }
+                mItemAdapter.setItemList(ItemListActivity.this, mItemList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                errorReadingDb(databaseError);
+            }
+        });
+    }
+
+    private void initializeItemList() { mItemList = new ArrayList<>(); }
+
+    private void createAdapter() { mItemAdapter = new ItemAdapter(this); }
+
     private void setRecyclerView() {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        // TODO create adapter, setAdapter to recyclerView, need to get data first and extract data, past data
+        mRecyclerView.setAdapter(mItemAdapter);
+    }
 
+    private void errorReadingDb(DatabaseError errorMsg) {
+        Toast.makeText(this, errorMsg.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -115,5 +148,10 @@ public class ItemListActivity extends AppCompatActivity {
         finish();
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void OnItemClickListener(Upload eachItem) {
+        Toast.makeText(this, "hello", Toast.LENGTH_SHORT).show();
     }
 }
