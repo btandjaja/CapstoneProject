@@ -28,6 +28,8 @@ import java.util.ArrayList;
 
 public class ItemListActivity extends AppCompatActivity implements ItemAdapter.ItemAdapterOnClickHandler {
 
+    public static final String SELLER_LISTING = "seller_listing";
+
     @BindView(R.id.tv_listing) TextView mTvListing;
     @BindView(R.id.tb_item_list) Toolbar mToolbar;
     @BindView(R.id.rv_item_list) RecyclerView mRecyclerView;
@@ -108,6 +110,10 @@ public class ItemListActivity extends AppCompatActivity implements ItemAdapter.I
             case R.id.menu_your_listing:
                 // TODO call your_listing activity
                 // store the items with this user's id to a list and past the list
+                ArrayList<Upload> sellerList = getSellerListing();
+                intent = new Intent(this, YourListingActivity.class);
+                intent.putParcelableArrayListExtra(SELLER_LISTING, sellerList);
+                startActivity(intent);
                 break;
             case R.id.menu_sell:
                 // TODO call sell activity
@@ -121,6 +127,17 @@ public class ItemListActivity extends AppCompatActivity implements ItemAdapter.I
                 return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+
+    private ArrayList<Upload> getSellerListing() {
+        ArrayList<Upload> currentList = new ArrayList<>();
+        for (Upload eachItem : mItemList) {
+            if (eachItem.getSellerUId().equals(FirebaseAuth.getInstance().getUid())) {
+                currentList.add(eachItem);
+            }
+        }
+
+        return currentList;
     }
 
     @Override

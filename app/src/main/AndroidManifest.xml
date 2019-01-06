@@ -59,6 +59,9 @@
         <activity
             android:name=".ItemDetailActivity"
             android:parentActivityName=".ItemListActivity" />
+        <activity
+            android:name=".YourListingActivity"
+            android:parentActivityName=".ItemListActivity" />
     </application>
 
 </manifest>

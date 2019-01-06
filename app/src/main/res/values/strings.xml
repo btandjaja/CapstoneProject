@@ -30,15 +30,16 @@
 
     <!-- title -->
     <string name="title_activity_register">Register</string>
+    <string name="title_activity_sell">Sell</string>
     <string name="title_activity_listing">Item On Sale!</string>
     <string name="title_item_detail_activity">Item Detail</string>
+    <string name="title_activity_your_listing">Your Listings</string>
 
     <string name="unique_id">USER_SPECIFIC_ID</string>
 
     <string name="menu_sold">Sold</string>
     <string name="menu_sell">Sell</string>
     <string name="menu_your_list">Your Listing</string>
-    <string name="title_activity_sell">Sell</string>
     <string name="insert_image">Insert Image</string>
     <string name="item_name">Title</string>
     <string name="description">Description</string>
