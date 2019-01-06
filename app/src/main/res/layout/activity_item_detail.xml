@@ -21,6 +21,7 @@
             app:layout_collapseMode="pin">
 
             <TextView
+                android:id="@+id/tv_title_place_holder"
                 style="@style/TextAppearance.AppCompat.Headline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -30,6 +31,6 @@
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-
+    <include layout="@layout/content_item_detail" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

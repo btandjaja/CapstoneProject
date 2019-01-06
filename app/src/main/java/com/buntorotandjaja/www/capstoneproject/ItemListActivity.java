@@ -106,9 +106,7 @@ public class ItemListActivity extends AppCompatActivity implements ItemAdapter.I
         switch(item.getItemId()) {
             case R.id.menu_your_listing:
                 // TODO call your_listing activity
-                break;
-            case R.id.menu_sold:
-                // TODO call sold activity
+                // store the items with this user's id to a list and past the list
                 break;
             case R.id.menu_sell:
                 // TODO call sell activity
@@ -147,9 +145,12 @@ public class ItemListActivity extends AppCompatActivity implements ItemAdapter.I
 
     @Override
     public void OnItemClickListener(Upload eachItem) {
+        mItemList.clear();
         Intent intent = new Intent(this, ItemDetailActivity.class);
         intent.putExtra(Upload.DISPLAY_ITEM_STRING, eachItem);
+        intent.putExtra(ItemDetailActivity.PREVIOUS_ACTIVITY, ItemDetailActivity.ITEM_LIST_ACTIVITY);
         startActivity(intent);
+
     }
 
     @Override

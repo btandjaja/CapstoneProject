@@ -66,7 +66,6 @@ public class SellActivity extends AppCompatActivity {
     @BindView(R.id.pb_uploading_image)
     ContentLoadingProgressBar mProgressBarItemUploading;
 
-    private String mUId;
     private Uri mImageUri;
     private String mCurrentPhotoPath;
     private Boolean mHasImage;
@@ -121,11 +120,7 @@ public class SellActivity extends AppCompatActivity {
                     uploadingInProgress();
                 } else {
                     if (meetPostingRequirement) {
-                        // TODO get the UId before listing
-                        mUId = FirebaseAuth.getInstance().getUid();
                         uploadFile();
-                        // TODO remove UId for security purpose
-                        mUId = "";
                     }
                 }
             }
@@ -247,7 +242,7 @@ public class SellActivity extends AppCompatActivity {
             final String description = mItemDescription.getText().toString().trim();
             final String price = mPrice.getText().toString().trim();
             // TODO firebaseStorage
-            final String uploadInfo = mUId + "_"
+            final String uploadInfo = FirebaseAuth.getInstance().getUid() + "_"
                     + title + "_"
                     + System.currentTimeMillis()
                     + "." + getFileExtension(mImageUri);
@@ -271,7 +266,7 @@ public class SellActivity extends AppCompatActivity {
                                     imageUri.getResult().toString(),
                                     title,
                                     description,
-                                    mUId,
+                                    FirebaseAuth.getInstance().getUid(),
                                     price);
                             String uploadId = mDbRef.push().getKey();
                             if (uploadId != null) {
@@ -332,6 +327,8 @@ public class SellActivity extends AppCompatActivity {
             case android.R.id.home:
                 if (mUploadTask != null && mUploadTask.isInProgress()) {
                     uploadingInProgress();
+                } else {
+                    onBackPressed();
                 }
                 return true;
             default:
@@ -346,6 +343,11 @@ public class SellActivity extends AppCompatActivity {
         mPrice.setText("0");
         mHasImage = false;
         meetPostingRequirement = false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     private void uploadingInProgress() {

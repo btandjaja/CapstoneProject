@@ -56,7 +56,9 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".ItemDetailActivity"></activity>
+        <activity
+            android:name=".ItemDetailActivity"
+            android:parentActivityName=".ItemListActivity" />
     </application>
 
 </manifest>
