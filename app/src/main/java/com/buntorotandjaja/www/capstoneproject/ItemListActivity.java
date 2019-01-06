@@ -67,6 +67,7 @@ public class ItemListActivity extends AppCompatActivity implements ItemAdapter.I
         mDbRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mItemList.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     mItemList.add(postSnapshot.getValue(Upload.class));
                 }
@@ -145,7 +146,6 @@ public class ItemListActivity extends AppCompatActivity implements ItemAdapter.I
 
     @Override
     public void OnItemClickListener(Upload eachItem) {
-        mItemList.clear();
         Intent intent = new Intent(this, ItemDetailActivity.class);
         intent.putExtra(Upload.DISPLAY_ITEM_STRING, eachItem);
         intent.putExtra(ItemDetailActivity.PREVIOUS_ACTIVITY, ItemDetailActivity.ITEM_LIST_ACTIVITY);

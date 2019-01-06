@@ -321,8 +321,12 @@ public class SellActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_delete:
-                // TODO delete all fields
-                clearInput();
+                if (mUploadTask != null && mUploadTask.isInProgress()) {
+                    uploadingInProgress();
+                } else {
+                    // TODO delete all fields
+                    clearInput();
+                }
                 return true;
             case android.R.id.home:
                 if (mUploadTask != null && mUploadTask.isInProgress()) {
@@ -332,6 +336,7 @@ public class SellActivity extends AppCompatActivity {
                 }
                 return true;
             default:
+                errorMessage();
                 return super.onOptionsItemSelected(item);
         }
     }
@@ -350,8 +355,12 @@ public class SellActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
+    private void errorMessage() {
+        Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
+    }
+
     private void uploadingInProgress() {
-        Toast.makeText(SellActivity.this, "Uploading in progress, please wait", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Uploading in progress, please wait", Toast.LENGTH_SHORT).show();
     }
 
     private void noImageSelected() {
@@ -359,6 +368,6 @@ public class SellActivity extends AppCompatActivity {
     }
 
     private void uploadSuccessful() {
-        Toast.makeText(SellActivity.this, "Upload succesful", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Upload succesful", Toast.LENGTH_SHORT).show();
     }
 }
