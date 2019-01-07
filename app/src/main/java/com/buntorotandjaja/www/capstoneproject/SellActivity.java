@@ -34,6 +34,7 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -269,6 +270,7 @@ public class SellActivity extends AppCompatActivity {
                                     FirebaseAuth.getInstance().getUid(),
                                     price);
                             String uploadId = mDbRef.push().getKey();
+                            upload.setUploadId(uploadId);
                             if (uploadId != null) {
                                 mDbRef.child(uploadId).setValue(upload);
                                 clearInput();
@@ -348,6 +350,15 @@ public class SellActivity extends AppCompatActivity {
         mPrice.setText("0");
         mHasImage = false;
         meetPostingRequirement = false;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (mUploadTask != null && mUploadTask.isInProgress()) {
+            uploadingInProgress();
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

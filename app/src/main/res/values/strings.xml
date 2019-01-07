@@ -58,6 +58,7 @@
     <string name="add_picture_or_camera_error">An error has occur</string>
 
     <string name="item_sold">Sold</string>
+    <string name="item_available">Available</string>
     <string name="sell_button">Sell</string>
     <string name="update_button">Update</string>
     <string name="buy_button">Buy</string>

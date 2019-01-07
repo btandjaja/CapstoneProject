@@ -51,13 +51,10 @@ public class ItemDetailActivity extends AppCompatActivity {
         mButtonHolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mPreviousActivity == ITEM_LIST_ACTIVITY) {
-                    // TODO if it's from item listing, then you can buy if you are not seller
+                if (!mSold) {
                     buyItem();
-                } else if (mPreviousActivity == YOUR_LISTING_ACTIVITY) {
-                    // TODO if it's from your listing, button is function as update only
                 } else {
-                    Toast.makeText(ItemDetailActivity.this, "entered from somewhere else, error", Toast.LENGTH_LONG).show();
+                    itemSold();
                 }
             }
         });
@@ -116,21 +113,26 @@ public class ItemDetailActivity extends AppCompatActivity {
 
     private void buyItem() {
         // TODO buyer is the seller
-        if (mBuyerUid.equals( mLoadedItem.getSellerUId() )) {
-            Toast.makeText(this, "Seller cannot buy his own item", Toast.LENGTH_LONG).show();
+        if (mBuyerUid.equals(mLoadedItem.getSellerUId())) {
+            Toast.makeText(this, "Please go to 'Your Listing' to update", Toast.LENGTH_LONG).show();
         } else {
             mLoadedItem.setBuyerUId(mBuyerUid);
             mLoadedItem.setSold(true);
             mSold = mLoadedItem.getSold();
             // TODO update database
-            mDbRef.child(mLoadedItem.getUploadInfo()).child("buyerUId").setValue(mBuyerUid);
-            mDbRef.child(mLoadedItem.getUploadInfo()).child("sold").setValue(mSold);
+            String uploadId = mLoadedItem.getUploadId();
+            mDbRef.child(uploadId).child("buyerUId").setValue(mBuyerUid);
+            mDbRef.child(uploadId).child("sold").setValue(mSold);
             Toast.makeText(this, "Congratulation, purchase complete!", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void errorToast() {
         Toast.makeText(ItemDetailActivity.this, "Fail to load, please try again.", Toast.LENGTH_LONG).show();
+    }
+
+    private void itemSold() {
+        Toast.makeText(this, "Item is no longer available", Toast.LENGTH_LONG).show();
     }
 
     @Override

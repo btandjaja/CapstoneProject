@@ -7,12 +7,16 @@ import androidx.appcompat.widget.Toolbar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class YourListingActivity extends AppCompatActivity {
+import static com.buntorotandjaja.www.capstoneproject.ItemDetailActivity.PREVIOUS_ACTIVITY;
+import static com.buntorotandjaja.www.capstoneproject.ItemDetailActivity.YOUR_LISTING_ACTIVITY;
+
+public class YourListingActivity extends AppCompatActivity implements ItemAdapter.ItemAdapterOnClickHandler{
 
     @BindView(R.id.rv_your_listing) RecyclerView mRecyclerView;
     @BindView(R.id.toolbar_your_listing) Toolbar mToolbar;
@@ -28,7 +32,6 @@ public class YourListingActivity extends AppCompatActivity {
         setupToolbar();
         getListing();
         initializeVariable();
-
     }
 
     private void setupToolbar() {
@@ -39,6 +42,7 @@ public class YourListingActivity extends AppCompatActivity {
     }
 
     private void getListing() {
+        mItemList = new ArrayList<>();
         Bundle data = getIntent().getExtras();
         if (data != null) {
             mItemList = data.getParcelableArrayList(ItemListActivity.SELLER_LISTING);
@@ -49,9 +53,10 @@ public class YourListingActivity extends AppCompatActivity {
 
     private void initializeVariable() {
         mItemAdapter = new ItemAdapter(this);
+        mItemAdapter.setItemList(this,mItemList);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
+        mRecyclerView.setAdapter(mItemAdapter);
     }
 
     private void errorReadingData() {
@@ -59,4 +64,11 @@ public class YourListingActivity extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    public void OnItemClickListener(Upload eachItem) {
+        Intent intent = new Intent(this, ItemDetailActivity.class);
+        intent.putExtra(PREVIOUS_ACTIVITY, YOUR_LISTING_ACTIVITY);
+        intent.putExtra(Upload.DISPLAY_ITEM_STRING, eachItem);
+        startActivity(intent);
+    }
 }

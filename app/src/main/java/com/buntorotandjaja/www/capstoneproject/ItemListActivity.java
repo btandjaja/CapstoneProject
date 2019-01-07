@@ -37,12 +37,14 @@ public class ItemListActivity extends AppCompatActivity implements ItemAdapter.I
     private DatabaseReference mDbRef;
     private ArrayList<Upload> mItemList;
     private ItemAdapter mItemAdapter;
+    private boolean mLogOut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_list);
         ButterKnife.bind(this);
+        mLogOut = false;
         // TODO set toolbar
         setToolbar();
         // TODO instantiate item list
@@ -78,7 +80,7 @@ public class ItemListActivity extends AppCompatActivity implements ItemAdapter.I
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                errorReadingDb(databaseError);
+                if (!mLogOut) errorReadingDb(databaseError);
             }
         });
     }
@@ -107,6 +109,10 @@ public class ItemListActivity extends AppCompatActivity implements ItemAdapter.I
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch(item.getItemId()) {
+            case android.R.id.home:
+                mLogOut = true;
+                onBackPressed();
+                break;
             case R.id.menu_your_listing:
                 // TODO call your_listing activity
                 // store the items with this user's id to a list and past the list
@@ -143,6 +149,7 @@ public class ItemListActivity extends AppCompatActivity implements ItemAdapter.I
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+            mLogOut = true;
             logout();
         }
         return super.onKeyDown(keyCode, event);
@@ -167,7 +174,6 @@ public class ItemListActivity extends AppCompatActivity implements ItemAdapter.I
         intent.putExtra(Upload.DISPLAY_ITEM_STRING, eachItem);
         intent.putExtra(ItemDetailActivity.PREVIOUS_ACTIVITY, ItemDetailActivity.ITEM_LIST_ACTIVITY);
         startActivity(intent);
-
     }
 
     @Override

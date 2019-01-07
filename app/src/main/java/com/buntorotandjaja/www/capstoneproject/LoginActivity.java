@@ -107,6 +107,7 @@ public class LoginActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             mPasswordView.requestFocus();
+            mProgressBarHolder.setVisibility(View.INVISIBLE);
             return;
         }
 
@@ -114,10 +115,12 @@ public class LoginActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(email)) {
             mEmailView.setError(getString(R.string.error_field_required));
             mEmailView.requestFocus();
+            mProgressBarHolder.setVisibility(View.INVISIBLE);
             return;
         } else if (!isEmailValid(email)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             mEmailView.requestFocus();
+            mProgressBarHolder.setVisibility(View.INVISIBLE);
             return;
         }
 

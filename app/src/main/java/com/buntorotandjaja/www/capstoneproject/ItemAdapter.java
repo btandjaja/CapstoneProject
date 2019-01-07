@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -43,6 +44,12 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         Picasso.get().load(imageUri).fit().centerCrop().into(itemView.mImageView);
         itemView.mItemTitle.setText(singleItem.getTitle());
         itemView.mItemPrice.setText(singleItem.getPrice());
+        int color = singleItem.getSold() ? mContext.getResources().getColor(R.color.background_sold) :
+                mContext.getResources().getColor(R.color.background_available);
+        String itemAvailability = singleItem.getSold() ? mContext.getString(R.string.item_sold) :
+                mContext.getString(R.string.item_available);
+        itemView.mItemStatus.setText(itemAvailability);
+        itemView.mItemStatus.setBackgroundColor(color);
     }
 
     @Override
@@ -65,6 +72,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         @BindView(R.id.iv_itemlist_image) ThreeTwoImageView mImageView;
         @BindView(R.id.tv_itemListing_itemName) TextView mItemTitle;
         @BindView(R.id.tv_itemListing_itemPrice) TextView mItemPrice;
+        @BindView(R.id.ll_each_card) LinearLayout mLinearLayout;
+        @BindView(R.id.tv_item_availability_status) TextView mItemStatus;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);

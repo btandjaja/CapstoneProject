@@ -62,6 +62,7 @@
         <activity
             android:name=".YourListingActivity"
             android:parentActivityName=".ItemListActivity" />
+        <activity android:name=".EditListing"></activity>
     </application>
 
 </manifest>
