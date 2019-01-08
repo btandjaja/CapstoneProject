@@ -162,16 +162,6 @@ public class ItemListActivity extends AppCompatActivity implements ItemAdapter.I
         return true;
     }
 
-//    private ArrayList<Upload> getSellerListing() {
-//        ArrayList<Upload> currentList = new ArrayList<>();
-//        for (Upload eachItem : mItemList) {
-//            if (eachItem.getSellerUId().equals(FirebaseAuth.getInstance().getUid())) {
-//                currentList.add(eachItem);
-//            }
-//        }
-//        return currentList;
-//    }
-
     private void loadingMessage() {
         Toast.makeText(this, "The page is loading, please wait", Toast.LENGTH_SHORT).show();
     }
