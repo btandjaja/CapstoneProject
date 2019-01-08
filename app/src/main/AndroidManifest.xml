@@ -62,7 +62,8 @@
         <activity
             android:name=".YourListingActivity"
             android:parentActivityName=".ItemListActivity" />
-        <activity android:name=".EditListing"></activity>
+        <activity android:name=".EditListing"
+            android:parentActivityName=".YourListingActivity"/>
     </application>
 
 </manifest>

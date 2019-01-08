@@ -64,8 +64,7 @@ public class SellActivity extends AppCompatActivity {
     @BindView(R.id.et_item_description) EditText mItemDescription;
     @BindView(R.id.et_item_price) EditText mPrice;
     @BindView(R.id.button_sell) Button mSell;
-    @BindView(R.id.pb_uploading_image)
-    ContentLoadingProgressBar mProgressBarItemUploading;
+    @BindView(R.id.pb_uploading_image) ContentLoadingProgressBar mProgressBarItemUploading;
 
     private Uri mImageUri;
     private String mCurrentPhotoPath;

@@ -1,5 +1,6 @@
 package com.buntorotandjaja.www.capstoneproject;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import butterknife.BindView;
@@ -15,8 +16,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 public class ItemDetailActivity extends AppCompatActivity {
@@ -51,11 +55,7 @@ public class ItemDetailActivity extends AppCompatActivity {
         mButtonHolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!mSold) {
-                    buyItem();
-                } else {
-                    itemSold();
-                }
+                buyItem();
             }
         });
     }
@@ -120,10 +120,30 @@ public class ItemDetailActivity extends AppCompatActivity {
             mLoadedItem.setSold(true);
             mSold = mLoadedItem.getSold();
             // TODO update database
-            String uploadId = mLoadedItem.getUploadId();
-            mDbRef.child(uploadId).child("buyerUId").setValue(mBuyerUid);
-            mDbRef.child(uploadId).child("sold").setValue(mSold);
-            Toast.makeText(this, "Congratulation, purchase complete!", Toast.LENGTH_SHORT).show();
+            final String uploadId = mLoadedItem.getUploadId();
+            // TODO last check in case item is already bought by a different user
+            mDbRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                        if (postSnapshot.equals(mLoadedItem.getUploadId())) {
+                            if (!postSnapshot.getValue(Upload.class).getSold()) {
+                                mDbRef.child(uploadId).child("buyerUId").setValue(mBuyerUid);
+                                mDbRef.child(uploadId).child("sold").setValue(mSold);
+                                itemPurchased();
+                            } else {
+                                itemSold();
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    transactionCancelled();
+                }
+            });
         }
     }
 
@@ -131,8 +151,16 @@ public class ItemDetailActivity extends AppCompatActivity {
         Toast.makeText(ItemDetailActivity.this, "Fail to load, please try again.", Toast.LENGTH_LONG).show();
     }
 
+    private void transactionCancelled() {
+        Toast.makeText(this, "Tansaction cancelled", Toast.LENGTH_SHORT).show();
+    }
+
     private void itemSold() {
         Toast.makeText(this, "Item is no longer available", Toast.LENGTH_LONG).show();
+    }
+
+    private void itemPurchased() {
+        Toast.makeText(ItemDetailActivity.this, "Congratulation, purchase complete!", Toast.LENGTH_SHORT).show();
     }
 
     @Override

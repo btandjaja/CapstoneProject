@@ -34,6 +34,7 @@
     <string name="title_activity_listing">Item On Sale!</string>
     <string name="title_item_detail_activity">Item Detail</string>
     <string name="title_activity_your_listing">Your Listings</string>
+    <string name="title_activity_edit_listing">Edit Listing</string>
 
     <string name="unique_id">USER_SPECIFIC_ID</string>
 

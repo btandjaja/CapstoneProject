@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".EditListing"
+    tools:showIn="@layout/activity_edit_listing">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <com.buntorotandjaja.www.capstoneproject.ThreeTwoImageView
+            android:id="@+id/item_image"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:contentDescription="@string/insert_image"
+            android:scaleType="fitXY"
+            android:src="@drawable/no_image_icon" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_margin_16dp"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/imageButton_upload_file_edit_listing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/file_upload_44dp" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/imageButton_take_picture_edit_listing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/add_a_photo_44dp" />
+        </LinearLayout>
+
+        <!-- item title-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_margin_16dp"
+            android:layout_marginTop="@dimen/activity_margin_16dp"
+            android:layout_marginEnd="@dimen/activity_margin_16dp"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/item_name" />
+
+            <EditText
+                android:id="@+id/et_item_title_edit_listing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:hint="@string/max_length"
+                android:inputType="textImeMultiLine"
+                android:maxLength="23" />
+        </LinearLayout>
+
+        <!-- item description -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_margin_16dp"
+            android:layout_marginTop="@dimen/activity_margin_16dp"
+            android:layout_marginEnd="@dimen/activity_margin_16dp"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/description" />
+
+            <EditText
+                android:id="@+id/et_item_description_edit_listing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top|start"
+                android:hint="@string/description_max_character"
+                android:inputType="textMultiLine"
+                android:maxLength="@string/description_max_length"
+                android:minLines="1"
+                android:scrollbarAlwaysDrawVerticalTrack="true"
+                android:scrollbars="vertical" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_margin_16dp"
+            android:layout_marginTop="@dimen/activity_margin_16dp"
+            android:layout_marginEnd="@dimen/activity_margin_16dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/item_price" />
+
+            <EditText
+                android:id="@+id/et_item_price_edit_listing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:maxLines="1" />
+        </LinearLayout>
+
+        <!-- confirm sell button, add to firebaseStore -->
+        <Button
+            android:id="@+id/button_update_edit_listing"
+            style="@style/register_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/update_button" />
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

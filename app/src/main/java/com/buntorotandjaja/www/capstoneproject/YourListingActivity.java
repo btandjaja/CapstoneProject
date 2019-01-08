@@ -13,9 +13,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import static com.buntorotandjaja.www.capstoneproject.ItemDetailActivity.PREVIOUS_ACTIVITY;
-import static com.buntorotandjaja.www.capstoneproject.ItemDetailActivity.YOUR_LISTING_ACTIVITY;
-
 public class YourListingActivity extends AppCompatActivity implements ItemAdapter.ItemAdapterOnClickHandler{
 
     @BindView(R.id.rv_your_listing) RecyclerView mRecyclerView;
@@ -66,8 +63,7 @@ public class YourListingActivity extends AppCompatActivity implements ItemAdapte
 
     @Override
     public void OnItemClickListener(Upload eachItem) {
-        Intent intent = new Intent(this, ItemDetailActivity.class);
-        intent.putExtra(PREVIOUS_ACTIVITY, YOUR_LISTING_ACTIVITY);
+        Intent intent = new Intent(this, EditListing.class);
         intent.putExtra(Upload.DISPLAY_ITEM_STRING, eachItem);
         startActivity(intent);
     }
