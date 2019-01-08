@@ -22,7 +22,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import static com.buntorotandjaja.www.capstoneproject.EditListing.POSITION;
 import static com.buntorotandjaja.www.capstoneproject.ItemListActivity.SELLER_LISTING;
 
 public class YourListingActivity extends AppCompatActivity implements ItemAdapter.ItemAdapterOnClickHandler{
@@ -35,9 +34,6 @@ public class YourListingActivity extends AppCompatActivity implements ItemAdapte
     private ArrayList<Upload> mItemList;
     private ItemAdapter mItemAdapter;
     private String mSellerUid;
-    private String mUploadId;
-    private int mPosition;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,7 +98,6 @@ public class YourListingActivity extends AppCompatActivity implements ItemAdapte
     public void OnItemClickListener(Upload eachItem) {
         Intent intent = new Intent(this, EditListing.class);
         intent.putExtra(Upload.DISPLAY_ITEM_STRING, eachItem);
-        mUploadId = eachItem.getUploadId();
         startActivityForResult(intent, OPEN_NEW_ACTIVITY);
     }
 
