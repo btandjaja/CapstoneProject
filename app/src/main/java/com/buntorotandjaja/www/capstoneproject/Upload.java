@@ -33,6 +33,7 @@ public class Upload implements Parcelable{
         dest.writeString(mPrice);
         dest.writeByte((byte) (mSold ? 1: 0));
         dest.writeString(mUploadId);
+        dest.writeInt(mPosition);
     }
 
     public static final String DISPLAY_ITEM_STRING = "display item string";
@@ -45,6 +46,7 @@ public class Upload implements Parcelable{
     private boolean mSold;
     private String mPrice;
     private String mUploadId;
+    private int mPosition;
 
     // empty constructor
     public Upload() {}
@@ -59,6 +61,7 @@ public class Upload implements Parcelable{
         mPrice = in.readString();
         mSold = in.readByte() != 0;
         mUploadId = in.readString();
+        mPosition = in.readInt();
     }
 
     public Upload(String uploadInfo, String imageUrl, String title,
@@ -75,6 +78,7 @@ public class Upload implements Parcelable{
         mSold = false;
         mBuyerUId = "";
         mUploadId = "";
+        mPosition = -1;
     }
     // setter
     public void setUploadInfo (String uploadInfo) { mUploadInfo = uploadInfo; }
@@ -86,6 +90,7 @@ public class Upload implements Parcelable{
     public void setSold (boolean sold) { mSold = sold; }
     public void setBuyerUId (String buyerUId) { mBuyerUId = buyerUId; }
     public void setUploadId (String key) { mUploadId = key; }
+    public void setPosition (int recyclerViewPosition) { mPosition = recyclerViewPosition; }
     // getter
     public String getUploadInfo () { return mUploadInfo; }
     public String getImageUrl () { return mImageUrl; }
@@ -96,4 +101,5 @@ public class Upload implements Parcelable{
     public String getBuyerUId () { return mBuyerUId; }
     public boolean getSold () { return mSold; }
     public String getUploadId () { return mUploadId; }
+    public int getPosition () { return mPosition; }
 }

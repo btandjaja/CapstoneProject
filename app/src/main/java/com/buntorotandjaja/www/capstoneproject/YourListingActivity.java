@@ -1,5 +1,7 @@
 package com.buntorotandjaja.www.capstoneproject;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -7,19 +9,34 @@ import androidx.appcompat.widget.Toolbar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 
+import static com.buntorotandjaja.www.capstoneproject.EditListing.POSITION;
+import static com.buntorotandjaja.www.capstoneproject.ItemListActivity.SELLER_LISTING;
+
 public class YourListingActivity extends AppCompatActivity implements ItemAdapter.ItemAdapterOnClickHandler{
+
+    private static final int OPEN_NEW_ACTIVITY = 813;
 
     @BindView(R.id.rv_your_listing) RecyclerView mRecyclerView;
     @BindView(R.id.toolbar_your_listing) Toolbar mToolbar;
 
     private ArrayList<Upload> mItemList;
     private ItemAdapter mItemAdapter;
+    private String mSellerUid;
+    private String mUploadId;
+    private int mPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,12 +57,28 @@ public class YourListingActivity extends AppCompatActivity implements ItemAdapte
 
     private void getListing() {
         mItemList = new ArrayList<>();
-        Bundle data = getIntent().getExtras();
-        if (data != null) {
-            mItemList = data.getParcelableArrayList(ItemListActivity.SELLER_LISTING);
+        mSellerUid = getIntent().getStringExtra(SELLER_LISTING);
+        if (mSellerUid != null) {
+            DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference(getString(R.string.app_name));
+            dbRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                        if (postSnapshot.getValue(Upload.class).getSellerUId().equals(mSellerUid)) {
+                            mItemList.add(postSnapshot.getValue(Upload.class));
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    error(databaseError.getMessage());
+                }
+            });
             return;
         }
-        errorReadingData();
+        // TODO no data to show
+        noDataToShow();
     }
 
     private void initializeVariable() {
@@ -56,15 +89,49 @@ public class YourListingActivity extends AppCompatActivity implements ItemAdapte
         mRecyclerView.setAdapter(mItemAdapter);
     }
 
-    private void errorReadingData() {
-        Toast.makeText(this, "Data corrupted.", Toast.LENGTH_SHORT).show();
+    private void noDataToShow() {
+        Toast.makeText(this, "You don't have any listing", Toast.LENGTH_SHORT).show();
         finish();
+    }
+
+    private void error(String dbErrorMsg) {
+        Toast.makeText(this, dbErrorMsg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void OnItemClickListener(Upload eachItem) {
         Intent intent = new Intent(this, EditListing.class);
         intent.putExtra(Upload.DISPLAY_ITEM_STRING, eachItem);
-        startActivity(intent);
+        mUploadId = eachItem.getUploadId();
+        startActivityForResult(intent, OPEN_NEW_ACTIVITY);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == OPEN_NEW_ACTIVITY) {
+            if (resultCode == Activity.RESULT_OK) {
+                mItemList.clear();
+                DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference(getString(R.string.app_name));
+
+                dbRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot postDataSnapshot : dataSnapshot.getChildren()) {
+                            Upload tempUpload = postDataSnapshot.getValue(Upload.class);
+                            if (tempUpload.getSellerUId().equals(mSellerUid)){
+                                mItemList.add(tempUpload);
+                            }
+                        }
+                        mItemAdapter.setItemList(YourListingActivity.this, mItemList);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        }
     }
 }

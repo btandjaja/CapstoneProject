@@ -1,6 +1,7 @@
 package com.buntorotandjaja.www.capstoneproject;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
@@ -9,6 +10,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
@@ -19,12 +21,16 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -49,6 +55,7 @@ public class EditListing extends AppCompatActivity {
     private static final int REQUEST_IMAGE_CAPTURE = 2;
     private static final int PERMISSION_REQUEST_CODE = 3;
     private static final String TAG = EditListing.class.getSimpleName();
+    public static final String POSITION = "position";
 
     @BindView(R.id.imageButton_upload_file_edit_listing) ImageButton mUploadImage;
     @BindView(R.id.imageButton_take_picture_edit_listing) ImageButton mTakePicture;
@@ -58,12 +65,13 @@ public class EditListing extends AppCompatActivity {
     @BindView(R.id.et_item_price_edit_listing) EditText mPrice;
     @BindView(R.id.pb_uploading_image_edit_listing) ContentLoadingProgressBar mProgressBarItemUploading;
     @BindView(R.id.item_image) ThreeTwoImageView mItemImage;
+    @BindView(R.id.button_update_edit_listing) Button mUpdate;
 
     private Upload mLoadedItem;
     private String mCurrentPhotoPath;
     private Uri mImageUri;
-    private Boolean mHasImage;
-    private Boolean meetPostingRequirement;
+    private boolean mHasImage;
+    private boolean meetPostingRequirement;
 
     private DatabaseReference mDbRef;
     private StorageReference mStorageRef;
@@ -80,6 +88,10 @@ public class EditListing extends AppCompatActivity {
         mUploadImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mUploadTask != null && mUploadTask.isInProgress()) {
+                    uploadingInProgress();
+                    return;
+                }
                 openFile();
             }
         });
@@ -91,6 +103,10 @@ public class EditListing extends AppCompatActivity {
         mTakePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mUploadTask != null && mUploadTask.isInProgress()) {
+                    uploadingInProgress();
+                    return;
+                }
                 if (Build.VERSION.SDK_INT >= 23) {
                     requestPermissions(
                             new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
@@ -103,7 +119,24 @@ public class EditListing extends AppCompatActivity {
         // TODO price input convert to currency format
         mPrice.addTextChangedListener(new DecimalCurrency(mPrice, "#,###"));
 
-        mUploadImage.setOnClickListener(new View.OnClickListener() {
+        mTakePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mUploadTask != null && mUploadTask.isInProgress()) {
+                    uploadingInProgress();
+                    return;
+                }
+
+                if (Build.VERSION.SDK_INT >= 23) {
+                    requestPermissions(
+                            new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            PERMISSION_REQUEST_CODE);
+                }
+                dispatchTakePictureIntent();
+            }
+        });
+
+        mUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkEmptyViews();
@@ -139,12 +172,9 @@ public class EditListing extends AppCompatActivity {
         mTitle.setText(title);
         mDescription.setText(description);
         mPrice.setText(price);
+        mHasImage = true;
+        meetPostingRequirement = true;
         Picasso.get().load(mImageUri).fit().centerCrop().into(mItemImage);
-    }
-
-    private void errorExtractingData() {
-        Toast.makeText(this, "Data corrupted.", Toast.LENGTH_SHORT).show();
-        finish();
     }
 
     private void openFile() {
@@ -271,9 +301,44 @@ public class EditListing extends AppCompatActivity {
                             mProgressBarItemUploading.setVisibility(View.INVISIBLE);
                             Toast.makeText(EditListing.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
+                    })
+                    .addOnCanceledListener(new OnCanceledListener() {
+                        @Override
+                        public void onCanceled() {
+                            cancelUploadingPicture();
+                        }
                     });
         } else {
             noImageSelected();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && data != null &&
+                data.getData() != null) {
+            if (resultCode == RESULT_OK) {
+                mHasImage = true;
+                mImageUri = data.getData();
+                Picasso.get().load(mImageUri).fit().centerCrop().into(mItemImage);
+                meetPostingRequirement = true;
+            } else {
+                meetPostingRequirement = false;
+                operationCancelled();
+            }
+        } else if (requestCode == REQUEST_IMAGE_CAPTURE) {
+            if (resultCode == RESULT_OK) {
+                mHasImage = true;
+                mItemImage.setImageURI(Uri.parse(mCurrentPhotoPath));
+            } else if (resultCode == RESULT_CANCELED) {
+                operationCancelled();
+                meetPostingRequirement = false;
+            }
+        } else {
+            cancelUploadingPicture();
+            meetPostingRequirement = false;
         }
     }
 
@@ -288,13 +353,45 @@ public class EditListing extends AppCompatActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                if (mUploadTask != null && mUploadTask.isInProgress()) {
+                    uploadingInProgress();
+                } else {
+                    onBackPressed();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (mUploadTask != null && mUploadTask.isInProgress()) {
+            uploadingInProgress();
+            return false;
+        }
+        onBackPressed();
+        return true;
+    }
+
+    @Override
     public void onBackPressed() {
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra(POSITION, mLoadedItem.getPosition());
+        setResult(Activity.RESULT_OK);
+        finish();
         super.onBackPressed();
     }
 
-    private void errorMessage() {
-        Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
+    private void errorExtractingData() {
+        Toast.makeText(this, "Data corrupted.", Toast.LENGTH_SHORT).show();
+        finish();
     }
+
+    private void cancelUploadingPicture() { Toast.makeText(this, "Operation Cancelled", Toast.LENGTH_SHORT).show(); }
 
     private void uploadingInProgress() {
         Toast.makeText(this, "Uploading in progress, please wait", Toast.LENGTH_SHORT).show();
@@ -306,5 +403,9 @@ public class EditListing extends AppCompatActivity {
 
     private void uploadSuccessful() {
         Toast.makeText(this, "Upload succesful", Toast.LENGTH_SHORT).show();
+    }
+
+    private void operationCancelled() {
+        Toast.makeText(this, getString(R.string.camera_operation_cancelled), Toast.LENGTH_SHORT).show();
     }
 }

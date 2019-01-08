@@ -85,6 +85,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         @Override
         public void onClick(View v) {
             Upload uploadData = mItemList.get(getAdapterPosition());
+            uploadData.setPosition(getAdapterPosition());
             if (uploadData == null) return;
             mOnClickHandler.OnItemClickListener(uploadData);
         }

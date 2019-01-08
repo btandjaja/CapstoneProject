@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -91,6 +92,11 @@ public class SellActivity extends AppCompatActivity {
         mUploadPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mUploadTask != null && mUploadTask.isInProgress()) {
+                    uploadingInProgress();
+                    return;
+                }
+
                 openFile();
             }
         });
@@ -99,6 +105,11 @@ public class SellActivity extends AppCompatActivity {
         mTakePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mUploadTask != null && mUploadTask.isInProgress()) {
+                    uploadingInProgress();
+                    return;
+                }
+
                 if (Build.VERSION.SDK_INT >= 23) {
                     requestPermissions(
                             new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
@@ -248,6 +259,12 @@ public class SellActivity extends AppCompatActivity {
                     + "." + getFileExtension(mImageUri);
             final StorageReference fileReference = mStorageReference.child(uploadInfo);
             mUploadTask = fileReference.putFile(mImageUri)
+                    .addOnCanceledListener(new OnCanceledListener() {
+                        @Override
+                        public void onCanceled() {
+                            hideIndicator();
+                        }
+                    })
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -288,9 +305,10 @@ public class SellActivity extends AppCompatActivity {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            // TODO hide progress bar
                             mProgressBarItemUploading.setVisibility(View.INVISIBLE);
                             Toast.makeText(SellActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            // TODO hide progress bar
+                            hideIndicator();
                         }
                     });
         } else {

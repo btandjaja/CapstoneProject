@@ -14,6 +14,8 @@ import android.os.PersistableBundle;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,11 +35,13 @@ public class ItemListActivity extends AppCompatActivity implements ItemAdapter.I
     @BindView(R.id.tv_listing) TextView mTvListing;
     @BindView(R.id.tb_item_list) Toolbar mToolbar;
     @BindView(R.id.rv_item_list) RecyclerView mRecyclerView;
+    @BindView(R.id.progressbar_holder_ItemListActivity) View mIndicatorHolder;
 
     private DatabaseReference mDbRef;
     private ArrayList<Upload> mItemList;
     private ItemAdapter mItemAdapter;
     private boolean mLogOut;
+    private boolean mWhileLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +52,7 @@ public class ItemListActivity extends AppCompatActivity implements ItemAdapter.I
         // TODO set toolbar
         setToolbar();
         // TODO instantiate item list
-        initializeItemList();
+        initialize();
         // TODO create adapter
          createAdapter();
         // TODO prepare recyclerView
@@ -65,27 +69,10 @@ public class ItemListActivity extends AppCompatActivity implements ItemAdapter.I
         mTvListing.setText(getString(R.string.app_name));
     }
 
-    private void createDbReference() { mDbRef = FirebaseDatabase.getInstance().getReference(getString(R.string.app_name)); }
-
-    private void extractData() {
-        mDbRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mItemList.clear();
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    mItemList.add(postSnapshot.getValue(Upload.class));
-                }
-                mItemAdapter.setItemList(ItemListActivity.this, mItemList);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                if (!mLogOut) errorReadingDb(databaseError);
-            }
-        });
+    private void initialize() {
+        mItemList = new ArrayList<>();
+        mWhileLoading = false;
     }
-
-    private void initializeItemList() { mItemList = new ArrayList<>(); }
 
     private void createAdapter() { mItemAdapter = new ItemAdapter(this); }
 
@@ -95,8 +82,45 @@ public class ItemListActivity extends AppCompatActivity implements ItemAdapter.I
         mRecyclerView.setAdapter(mItemAdapter);
     }
 
+    private void createDbReference() {
+        mDbRef = FirebaseDatabase.getInstance().getReference(getString(R.string.app_name));
+    }
+
+    private void extractData() {
+        showIndicator();
+        mDbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                mItemList.clear();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    mItemList.add(postSnapshot.getValue(Upload.class));
+                }
+                mItemAdapter.setItemList(ItemListActivity.this, mItemList);
+                hideIndicator();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                if (!mLogOut) errorReadingDb(databaseError);
+                hideIndicator();
+            }
+        });
+
+    }
+
     private void errorReadingDb(DatabaseError errorMsg) {
         Toast.makeText(this, errorMsg.getMessage(), Toast.LENGTH_SHORT).show();
+    }
+
+    private void hideIndicator() {
+        mWhileLoading = false;
+        mIndicatorHolder.setVisibility(View.INVISIBLE);
+    }
+
+    private void showIndicator() {
+        mWhileLoading = true;
+        mIndicatorHolder.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -107,6 +131,11 @@ public class ItemListActivity extends AppCompatActivity implements ItemAdapter.I
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (mWhileLoading) {
+            loadingMessage();
+            return true;
+        }
+
         Intent intent;
         switch(item.getItemId()) {
             case android.R.id.home:
@@ -115,10 +144,8 @@ public class ItemListActivity extends AppCompatActivity implements ItemAdapter.I
                 break;
             case R.id.menu_your_listing:
                 // TODO call your_listing activity
-                // store the items with this user's id to a list and past the list
-                ArrayList<Upload> sellerList = getSellerListing();
                 intent = new Intent(this, YourListingActivity.class);
-                intent.putParcelableArrayListExtra(SELLER_LISTING, sellerList);
+                intent.putExtra(SELLER_LISTING, FirebaseAuth.getInstance().getUid());
                 startActivity(intent);
                 break;
             case R.id.menu_sell:
@@ -135,22 +162,27 @@ public class ItemListActivity extends AppCompatActivity implements ItemAdapter.I
         return true;
     }
 
-    private ArrayList<Upload> getSellerListing() {
-        ArrayList<Upload> currentList = new ArrayList<>();
-        for (Upload eachItem : mItemList) {
-            if (eachItem.getSellerUId().equals(FirebaseAuth.getInstance().getUid())) {
-                currentList.add(eachItem);
-            }
-        }
+//    private ArrayList<Upload> getSellerListing() {
+//        ArrayList<Upload> currentList = new ArrayList<>();
+//        for (Upload eachItem : mItemList) {
+//            if (eachItem.getSellerUId().equals(FirebaseAuth.getInstance().getUid())) {
+//                currentList.add(eachItem);
+//            }
+//        }
+//        return currentList;
+//    }
 
-        return currentList;
+    private void loadingMessage() {
+        Toast.makeText(this, "The page is loading, please wait", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && !mWhileLoading) {
             mLogOut = true;
             logout();
+        } else {
+            loadingMessage();
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -162,10 +194,15 @@ public class ItemListActivity extends AppCompatActivity implements ItemAdapter.I
     }
 
     private void logout() {
-        FirebaseAuth.getInstance().signOut();
-        finish();
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
+        try {
+            FirebaseAuth.getInstance().signOut();
+            finish();
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            signoutSuccessful();
+        } catch (Exception e) {
+            signoutFail(e.getMessage());
+        }
     }
 
     @Override
@@ -176,9 +213,18 @@ public class ItemListActivity extends AppCompatActivity implements ItemAdapter.I
         startActivity(intent);
     }
 
+    // TODO for rotating, currently disabled
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
         outState.putParcelableArrayList(Upload.DISPLAY_ITEM_STRING, mItemList);
+    }
+
+    private void signoutSuccessful() {
+        Toast.makeText(this, "You have signed out", Toast.LENGTH_SHORT).show();
+    }
+
+    private void signoutFail(String errorMsg) {
+        Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
     }
 }
