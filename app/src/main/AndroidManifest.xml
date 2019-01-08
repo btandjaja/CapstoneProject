@@ -17,7 +17,7 @@
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/garage_sale_icon"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -62,8 +62,19 @@
         <activity
             android:name=".YourListingActivity"
             android:parentActivityName=".ItemListActivity" />
-        <activity android:name=".EditListing"
-            android:parentActivityName=".YourListingActivity"/>
+        <activity
+            android:name=".EditListing"
+            android:parentActivityName=".YourListingActivity" />
+
+        <receiver android:name=".CapstoneWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/capstone_widget_provider_info" />
+        </receiver>
     </application>
 
 </manifest>

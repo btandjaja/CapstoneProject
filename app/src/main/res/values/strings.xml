@@ -64,6 +64,8 @@
     <string name="update_button">Update</string>
     <string name="buy_button">Buy</string>
 
+
+    <string name="appwidget_image">Item status</string>
     <!-- add / retrieve data -->
     <string name="db_uploadInfo">uploadInfo</string>
     <string name="db_uid">uid</string>
@@ -73,5 +75,7 @@
     <string name="db_title">title</string>
     <string name="db_description">description</string>
     <string name="db_price">price</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 
 </resources>
