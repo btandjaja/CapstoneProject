@@ -1,7 +1,6 @@
 package com.buntorotandjaja.www.capstoneproject;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
