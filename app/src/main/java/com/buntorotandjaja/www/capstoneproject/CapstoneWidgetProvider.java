@@ -6,6 +6,9 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * Implementation of App Widget functionality.
@@ -24,7 +27,7 @@ public class CapstoneWidgetProvider extends AppWidgetProvider {
         Intent intent = itemSold ? new Intent(context, ItemListActivity.class) :
                 new Intent(context, LoginActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context,0, intent, 0);
-
+        Toast.makeText(context, "id" + FirebaseAuth.getInstance().getUid(), Toast.LENGTH_SHORT).show();
 
         // change image if there's an item sold
         int image = itemSold ? R.drawable.garage_sale_sold : R.drawable.garage_sale_icon;

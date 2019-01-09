@@ -34,6 +34,8 @@ public class LoginActivity extends AppCompatActivity {
     // Firebase Authentication
     private FirebaseAuth mAuth;
 
+    private boolean mLoading;
+
     // UI references.
     @BindView(R.id.email) AutoCompleteTextView mEmailView;
     @BindView(R.id.password) EditText mPasswordView;
@@ -52,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         clearLoginForm();
-
+        mLoading = false;
         // FirebaseAuth instance
         initializeFirebaseAuth();
 
@@ -93,8 +95,7 @@ public class LoginActivity extends AppCompatActivity {
         if (mAuth == null) {
             return;
         }
-        // TODO show progress bar visibility
-        mProgressBarHolder.setVisibility(View.VISIBLE);
+        showIndicator();
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
@@ -107,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             mPasswordView.requestFocus();
-            mProgressBarHolder.setVisibility(View.INVISIBLE);
+            hideIndicator();
             return;
         }
 
@@ -115,12 +116,12 @@ public class LoginActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(email)) {
             mEmailView.setError(getString(R.string.error_field_required));
             mEmailView.requestFocus();
-            mProgressBarHolder.setVisibility(View.INVISIBLE);
+            hideIndicator();
             return;
         } else if (!isEmailValid(email)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             mEmailView.requestFocus();
-            mProgressBarHolder.setVisibility(View.INVISIBLE);
+            hideIndicator();
             return;
         }
 
@@ -130,13 +131,11 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // TODO remove progress bar visibility
-                            mProgressBarHolder.setVisibility(View.INVISIBLE);
+                            hideIndicator();
                             Intent intent = new Intent(LoginActivity.this, ItemListActivity.class);
                             startActivity(intent);
                         } else {
-                            // TODO remove progress bar visibility
-                            mProgressBarHolder.setVisibility(View.INVISIBLE);
+                            hideIndicator();
                             // show error
                             Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
@@ -152,6 +151,39 @@ public class LoginActivity extends AppCompatActivity {
     public void register(View view) {
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
+    }
+
+    private void showIndicator() {
+        // TODO show progress bar visibility
+        mProgressBarHolder.setVisibility(View.VISIBLE);
+        mLoading = true;
+        mEmailView.setFocusableInTouchMode(false);
+        mEmailView.setFocusable(false);
+        mEmailView.setEnabled(false);
+        mPasswordView.setFocusableInTouchMode(false);
+        mPasswordView.setFocusable(false);
+        mPasswordView.setEnabled(false);
+        mRegister.setEnabled(false);
+        mEmailSignInButton.setEnabled(false);
+    }
+
+    private void hideIndicator() {
+        mProgressBarHolder.setVisibility(View.INVISIBLE);
+        mLoading = false;
+        mEmailView.setFocusableInTouchMode(true);
+        mEmailView.setFocusable(true);
+        mEmailView.setEnabled(true);
+        mPasswordView.setFocusableInTouchMode(true);
+        mPasswordView.setFocusable(true);
+        mPasswordView.setEnabled(true);
+        mRegister.setEnabled(true);
+        mEmailSignInButton.setEnabled(true);
+    }
+
+    @Override
+    protected void onResume() {
+        clearLoginForm();
+        super.onResume();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.buntorotandjaja.www.capstoneproject;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -21,6 +22,7 @@ public class CheckDBListing {
     public static boolean getSold(Context context) {
         mSold = false;
         mSellerUid = FirebaseAuth.getInstance().getUid();
+        Toast.makeText(context, "hello" + mSellerUid, Toast.LENGTH_SHORT).show();
         if (mSellerUid == null) return false;
         mDbRef = FirebaseDatabase.getInstance().getReference(context.getString(R.string.app_name));
         mDbRef.addValueEventListener(new ValueEventListener() {
