@@ -22,7 +22,6 @@ public class CheckDBListing {
     public static boolean getSold(Context context) {
         mSold = false;
         mSellerUid = FirebaseAuth.getInstance().getUid();
-        Toast.makeText(context, "hello" + mSellerUid, Toast.LENGTH_SHORT).show();
         if (mSellerUid == null) return false;
         mDbRef = FirebaseDatabase.getInstance().getReference(context.getString(R.string.app_name));
         mDbRef.addValueEventListener(new ValueEventListener() {

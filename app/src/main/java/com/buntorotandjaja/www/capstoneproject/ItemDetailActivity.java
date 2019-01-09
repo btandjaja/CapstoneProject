@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PersistableBundle;
+import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -161,6 +163,30 @@ public class ItemDetailActivity extends AppCompatActivity {
 
     private void itemPurchased() {
         Toast.makeText(ItemDetailActivity.this, "Congratulation, purchase complete!", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+            default:
+                return false;
+        }
+        return true;
     }
 
     @Override

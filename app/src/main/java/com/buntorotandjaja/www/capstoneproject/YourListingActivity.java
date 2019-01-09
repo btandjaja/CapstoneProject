@@ -12,6 +12,8 @@ import butterknife.ButterKnife;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -92,6 +94,30 @@ public class YourListingActivity extends AppCompatActivity implements ItemAdapte
 
     private void error(String dbErrorMsg) {
         Toast.makeText(this, dbErrorMsg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+            default:
+                return false;
+        }
+        return true;
     }
 
     @Override
