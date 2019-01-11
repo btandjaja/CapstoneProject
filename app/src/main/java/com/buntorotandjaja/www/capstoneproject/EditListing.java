@@ -169,6 +169,7 @@ public class EditListing extends AppCompatActivity {
         String description = mLoadedItem.getDescription();
         String price = mLoadedItem.getPrice();
         mImageUri = Uri.parse(mLoadedItem.getImageUrl());
+
         mTitle.setText(title);
         mDescription.setText(description);
         mPrice.setText(price);
@@ -255,11 +256,18 @@ public class EditListing extends AppCompatActivity {
             final String title = mTitle.getText().toString().trim();
             final String description = mDescription.getText().toString().trim();
             final String price = mPrice.getText().toString().trim();
+            String extension = "";
+            if (mImageUri.toString().contains("http")) {
+                extension = mImageUri.toString().split("[?]")[0];
+            } else {
+                extension = getFileExtension(mImageUri);
+            }
             final String uploadInfo = FirebaseAuth.getInstance().getUid() + "_"
                     + title + "_"
                     + System.currentTimeMillis()
-                    + "." + getFileExtension(mImageUri);
+                    + "." + extension ;
             final StorageReference fileReference = mStorageRef.child(uploadInfo);
+
             mUploadTask = fileReference.putFile(mImageUri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -410,6 +418,6 @@ public class EditListing extends AppCompatActivity {
     }
 
     private void showToast(int stringInt) {
-        Toast.makeText(this, getResources().getString(stringInt), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(stringInt), Toast.LENGTH_SHORT).show();
     }
 }
