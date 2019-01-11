@@ -14,15 +14,13 @@ import androidx.annotation.NonNull;
 
 public class CheckDBListing {
 
-    private static DatabaseReference mDbRef;
-    private static String mSellerUid;
     private static boolean mSold;
 
     public static boolean getSold(Context context) {
         mSold = false;
-        mSellerUid = FirebaseAuth.getInstance().getUid();
+        final String mSellerUid = FirebaseAuth.getInstance().getUid();
         if (mSellerUid == null) return false;
-        mDbRef = FirebaseDatabase.getInstance().getReference(context.getString(R.string.app_name));
+        DatabaseReference mDbRef = FirebaseDatabase.getInstance().getReference(context.getString(R.string.app_name));
         mDbRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

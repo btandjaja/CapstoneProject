@@ -7,6 +7,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import com.firebase.jobdispatcher.Constraint;
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.GooglePlayDriver;
+import com.firebase.jobdispatcher.Job;
+import com.firebase.jobdispatcher.Lifetime;
+import com.firebase.jobdispatcher.RetryStrategy;
+import com.firebase.jobdispatcher.Trigger;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -43,6 +50,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -52,6 +60,9 @@ import java.util.Date;
 
 public class SellActivity extends AppCompatActivity {
 
+    public static int CHANGE_IMAGE = 0;
+    private static final int RIGHT_AWAY = 0;
+    private static final int THIRTY_MINUTES = 18000;
     private final static int PICK_IMAGE_REQUEST = 1;
     private final static int REQUEST_IMAGE_CAPTURE = 2;
     private final static int PERMISSION_REQUEST_CODE = 3;
@@ -76,6 +87,7 @@ public class SellActivity extends AppCompatActivity {
     private StorageReference mStorageReference;
     private DatabaseReference mDbRef;
     private StorageTask mUploadTask;
+    private FirebaseJobDispatcher mJobDispatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +98,7 @@ public class SellActivity extends AppCompatActivity {
         setupToolbar();
         mHasImage = false;
         meetPostingRequirement = false;
+        mJobDispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
         // TODO needed when
         mStorageReference = FirebaseStorage.getInstance().getReference(getString(R.string.app_name));
         mDbRef = FirebaseDatabase.getInstance().getReference(getString(R.string.app_name));
@@ -292,6 +305,12 @@ public class SellActivity extends AppCompatActivity {
                                 clearInput();
                                 uploadSuccessful();
                                 hideIndicator();
+                                ImageView soldImage = findViewById(R.id.imageView_capstoneWidget);
+                                if (soldImage.getDrawable().getConstantState() == getResources().getDrawable(R.drawable.garage_sale_sold).getConstantState()) {
+                                    stopJob();
+                                } else {
+                                    startJob();
+                                }
                             }
                         }
                     })
@@ -328,6 +347,25 @@ public class SellActivity extends AppCompatActivity {
 
     private void operationCancelled() {
         Toast.makeText(this, getString(R.string.camera_operation_cancelled), Toast.LENGTH_SHORT).show();
+    }
+
+    private void startJob() {
+        Job job = mJobDispatcher.newJobBuilder()
+                .setService(SoldJobService.class)
+                .setLifetime(Lifetime.FOREVER)
+                .setRecurring(true)
+                .setTag(SoldJobService.JOB_TAG)
+                .setTrigger(Trigger.executionWindow(RIGHT_AWAY, THIRTY_MINUTES))
+                .setReplaceCurrent(false)
+                .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
+                .setConstraints(Constraint.ON_ANY_NETWORK)
+                .build();
+
+        mJobDispatcher.mustSchedule(job);
+    }
+
+    private void stopJob() {
+        mJobDispatcher.cancel(SoldJobService.JOB_TAG);
     }
 
     @Override

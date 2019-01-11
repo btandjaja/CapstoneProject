@@ -23,10 +23,11 @@ public class CapstoneWidgetProvider extends AppWidgetProvider {
         // Create intent to launch app when clicked
         Intent intent = itemSold ? new Intent(context, ItemListActivity.class) :
                 new Intent(context, LoginActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context,0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context,0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // change image if there's an item sold
-        int image = itemSold ? R.drawable.garage_sale_sold : R.drawable.garage_sale_icon;
+//        int image = itemSold ? R.drawable.garage_sale_sold : R.drawable.garage_sale_icon;
+        int image = SellActivity.CHANGE_IMAGE == 1 ? R.drawable.garage_sale_sold : R.drawable.garage_sale_icon;
         // set image accordingly
         views.setImageViewResource(R.id.imageView_capstoneWidget, image);
         // TODO to expand the idea, put extra in intent and extract from login
