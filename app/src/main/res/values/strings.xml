@@ -57,6 +57,7 @@
     <string name="item_image">Item image</string>
 
     <string name="add_picture_or_camera_error">An error has occur</string>
+    <string name="error">Error!</string>
 
     <string name="item_sold">Sold</string>
     <string name="item_available">Available</string>
@@ -77,5 +78,19 @@
     <string name="db_price">price</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+
+    <string name="upload_successful">Upload successful</string>
+    <string name="no_image_selected">No image selected</string>
+    <string name="uploading_in_progress">Uploading in progress, please wait</string>
+    <string name="operation_cancelled">Operation Cancelled</string>
+    <string name="data_corrupted">Data corrupted</string>
+    <string name="fail_to_load">Fail to load, please try again</string>
+    <string name="item_not_available">Item is no longer available</string>
+    <string name="purchase_complete">Congratulation, purchase complete!</string>
+    <string name="wrong_place_to_update">Please go to \'Your Listing\' to update</string>
+    <string name="item_loading">The page is loading, please wait</string>
+    <string name="sign_out_complete">You have signed out</string>
+
+    <string name="log_create_account_successful">createUserWithEmail\:success</string>
 
 </resources>

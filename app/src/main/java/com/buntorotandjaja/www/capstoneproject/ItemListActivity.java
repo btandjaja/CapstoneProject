@@ -73,7 +73,9 @@ public class ItemListActivity extends AppCompatActivity implements ItemAdapter.I
         mWhileLoading = false;
     }
 
-    private void createAdapter() { mItemAdapter = new ItemAdapter(this); }
+    private void createAdapter() {
+        mItemAdapter = new ItemAdapter(this);
+    }
 
     private void setRecyclerView() {
         mRecyclerView.setHasFixedSize(true);
@@ -162,7 +164,7 @@ public class ItemListActivity extends AppCompatActivity implements ItemAdapter.I
     }
 
     private void loadingMessage() {
-        Toast.makeText(this, "The page is loading, please wait", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.item_loading), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -190,7 +192,7 @@ public class ItemListActivity extends AppCompatActivity implements ItemAdapter.I
             startActivity(intent);
             signoutSuccessful();
         } catch (Exception e) {
-            signoutFail(e.getMessage());
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -210,10 +212,6 @@ public class ItemListActivity extends AppCompatActivity implements ItemAdapter.I
     }
 
     private void signoutSuccessful() {
-        Toast.makeText(this, "You have signed out", Toast.LENGTH_SHORT).show();
-    }
-
-    private void signoutFail(String errorMsg) {
-        Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.sign_out_complete), Toast.LENGTH_SHORT).show();
     }
 }

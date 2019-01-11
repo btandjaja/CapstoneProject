@@ -116,7 +116,7 @@ public class ItemDetailActivity extends AppCompatActivity {
     private void buyItem() {
         // TODO buyer is the seller
         if (mBuyerUid.equals(mLoadedItem.getSellerUId())) {
-            Toast.makeText(this, "Please go to 'Your Listing' to update", Toast.LENGTH_LONG).show();
+            showToast(R.string.wrong_place_to_update);
         } else {
             mLoadedItem.setBuyerUId(mBuyerUid);
             mLoadedItem.setSold(true);
@@ -150,19 +150,23 @@ public class ItemDetailActivity extends AppCompatActivity {
     }
 
     private void errorToast() {
-        Toast.makeText(ItemDetailActivity.this, "Fail to load, please try again.", Toast.LENGTH_LONG).show();
+        showToast(R.string.fail_to_load);
     }
 
     private void transactionCancelled() {
-        Toast.makeText(this, "Tansaction cancelled", Toast.LENGTH_SHORT).show();
+        showToast(R.string.operation_cancelled);
     }
 
     private void itemSold() {
-        Toast.makeText(this, "Item is no longer available", Toast.LENGTH_LONG).show();
+        showToast(R.string.item_not_available);
     }
 
     private void itemPurchased() {
-        Toast.makeText(ItemDetailActivity.this, "Congratulation, purchase complete!", Toast.LENGTH_SHORT).show();
+        showToast(R.string.purchase_complete);
+    }
+
+    private void showToast(int stringInt) {
+        Toast.makeText(this, getString(stringInt), Toast.LENGTH_SHORT).show();
     }
 
     @Override

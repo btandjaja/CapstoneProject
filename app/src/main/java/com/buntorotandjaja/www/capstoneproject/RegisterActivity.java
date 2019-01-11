@@ -155,7 +155,7 @@ public class RegisterActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             mProgressbarHolder.setVisibility(View.INVISIBLE);
                             // sign in success, update UI with the signed-in user's information
-                            Log.d(this.getClass().getSimpleName(), "createUserWithEmail:success");
+                            Log.d(this.getClass().getSimpleName(), getString(R.string.log_create_account_successful));
                             FirebaseUser user = mAuth.getCurrentUser();
                             Intent intent = new Intent(RegisterActivity.this, ItemListActivity.class);
                             startActivity(intent);

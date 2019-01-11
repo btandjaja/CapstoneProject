@@ -305,12 +305,8 @@ public class SellActivity extends AppCompatActivity {
                                 clearInput();
                                 uploadSuccessful();
                                 hideIndicator();
-                                ImageView soldImage = findViewById(R.id.imageView_capstoneWidget);
-                                if (soldImage.getDrawable().getConstantState() == getResources().getDrawable(R.drawable.garage_sale_sold).getConstantState()) {
-                                    stopJob();
-                                } else {
-                                    startJob();
-                                }
+                                // todo think
+//                                startJob();
                             }
                         }
                     })
@@ -349,6 +345,7 @@ public class SellActivity extends AppCompatActivity {
         Toast.makeText(this, getString(R.string.camera_operation_cancelled), Toast.LENGTH_SHORT).show();
     }
 
+    // TODO confused
     private void startJob() {
         Job job = mJobDispatcher.newJobBuilder()
                 .setService(SoldJobService.class)
@@ -402,7 +399,8 @@ public class SellActivity extends AppCompatActivity {
         mItemImage.setImageDrawable(getDrawable(R.drawable.no_image_icon));
         mItemTitle.setText("");
         mItemDescription.setText("");
-        mPrice.setText("0");
+        mPrice.clearComposingText();
+//        mPrice.setText("0");
         mHasImage = false;
         meetPostingRequirement = false;
     }
@@ -422,18 +420,22 @@ public class SellActivity extends AppCompatActivity {
     }
 
     private void errorMessage() {
-        Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
+        showToast(R.string.error);
     }
 
     private void uploadingInProgress() {
-        Toast.makeText(this, "Uploading in progress, please wait", Toast.LENGTH_SHORT).show();
+        showToast(R.string.uploading_in_progress);
     }
 
     private void noImageSelected() {
-        Toast.makeText(this, "No image selected", Toast.LENGTH_LONG).show();
+        showToast(R.string.no_image_selected);
     }
 
     private void uploadSuccessful() {
-        Toast.makeText(this, "Upload succesful", Toast.LENGTH_SHORT).show();
+        showToast(R.string.upload_successful);
+    }
+
+    private void showToast(int stringInt) {
+        Toast.makeText(this, getString(stringInt), Toast.LENGTH_SHORT).show();
     }
 }

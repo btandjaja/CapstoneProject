@@ -224,7 +224,7 @@ public class EditListing extends AppCompatActivity {
     // check for views before confirming to sell
     private void checkEmptyViews() {
         if (!mHasImage) {
-            Toast.makeText(this, getString(R.string.error_no_image), Toast.LENGTH_LONG).show();
+            noImageSelected();
             return;
         } else if (TextUtils.isEmpty(mTitle.getText().toString().trim())) {
             mTitle.setError(getString(R.string.error_title_required));
@@ -255,7 +255,6 @@ public class EditListing extends AppCompatActivity {
             final String title = mTitle.getText().toString().trim();
             final String description = mDescription.getText().toString().trim();
             final String price = mPrice.getText().toString().trim();
-            // TODO firebaseStorage
             final String uploadInfo = FirebaseAuth.getInstance().getUid() + "_"
                     + title + "_"
                     + System.currentTimeMillis()
@@ -297,8 +296,7 @@ public class EditListing extends AppCompatActivity {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            // TODO hide progress bar
-                            mProgressBarItemUploading.setVisibility(View.INVISIBLE);
+                            hideIndicator();
                             Toast.makeText(EditListing.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     })
@@ -387,25 +385,31 @@ public class EditListing extends AppCompatActivity {
     }
 
     private void errorExtractingData() {
-        Toast.makeText(this, "Data corrupted.", Toast.LENGTH_SHORT).show();
+        showToast(R.string.data_corrupted);
         finish();
     }
 
-    private void cancelUploadingPicture() { Toast.makeText(this, "Operation Cancelled", Toast.LENGTH_SHORT).show(); }
+    private void cancelUploadingPicture() {
+        showToast(R.string.operation_cancelled);
+    }
 
     private void uploadingInProgress() {
-        Toast.makeText(this, "Uploading in progress, please wait", Toast.LENGTH_SHORT).show();
+        showToast(R.string.uploading_in_progress);
     }
 
     private void noImageSelected() {
-        Toast.makeText(this, "No image selected", Toast.LENGTH_LONG).show();
+        showToast(R.string.no_image_selected);
     }
 
     private void uploadSuccessful() {
-        Toast.makeText(this, "Upload succesful", Toast.LENGTH_SHORT).show();
+        showToast(R.string.upload_successful);
     }
 
     private void operationCancelled() {
-        Toast.makeText(this, getString(R.string.camera_operation_cancelled), Toast.LENGTH_SHORT).show();
+        showToast(R.string.camera_operation_cancelled);
+    }
+
+    private void showToast(int stringInt) {
+        Toast.makeText(this, getResources().getString(stringInt), Toast.LENGTH_SHORT).show();
     }
 }
