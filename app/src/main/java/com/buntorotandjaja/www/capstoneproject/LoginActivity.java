@@ -104,14 +104,6 @@ public class LoginActivity extends AppCompatActivity {
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
-        // Check for nonempty password
-        if (TextUtils.isEmpty(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            mPasswordView.requestFocus();
-            hideIndicator();
-            return;
-        }
-
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
             mEmailView.setError(getString(R.string.error_field_required));
@@ -121,6 +113,14 @@ public class LoginActivity extends AppCompatActivity {
         } else if (!isEmailValid(email)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             mEmailView.requestFocus();
+            hideIndicator();
+            return;
+        }
+
+        // Check for nonempty password
+        if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError(getString(R.string.error_invalid_password));
+            mPasswordView.requestFocus();
             hideIndicator();
             return;
         }

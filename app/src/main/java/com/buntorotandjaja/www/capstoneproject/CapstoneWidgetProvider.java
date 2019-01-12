@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 /**
  * Implementation of App Widget functionality.
@@ -21,16 +22,15 @@ public class CapstoneWidgetProvider extends AppWidgetProvider {
         boolean itemSold = CheckDBListing.getSold(context);
 
         // Create intent to launch app when clicked
-        Intent intent = itemSold ? new Intent(context, ItemListActivity.class) :
-                new Intent(context, LoginActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context,0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
+        Intent intent = new Intent(context, CapstoneWidgetProvider.class);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(context,0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         // change image if there's an item sold
-        int image = SellActivity.CHANGE_IMAGE == 1 ? R.drawable.garage_sale_sold : R.drawable.garage_sale_icon;
+        int image = itemSold ? R.drawable.garage_sale_sold : R.drawable.garage_sale_icon;
         // set image accordingly
         views.setImageViewResource(R.id.imageView_capstoneWidget, image);
-
-        views.setOnClickPendingIntent(R.id.imageView_capstoneWidget, pendingIntent);
+        views.setPendingIntentTemplate(appWidgetId, pendingIntent);
+//        views.setOnClickPendingIntent(R.id.imageView_capstoneWidget, pendingIntent);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);

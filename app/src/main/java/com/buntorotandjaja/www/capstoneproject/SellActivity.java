@@ -353,7 +353,7 @@ public class SellActivity extends AppCompatActivity {
                 .setRecurring(true)
                 .setTag(SoldJobService.JOB_TAG)
                 .setTrigger(Trigger.executionWindow(RIGHT_AWAY, THIRTY_MINUTES))
-                .setReplaceCurrent(false)
+                .setReplaceCurrent(true)
                 .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
                 .setConstraints(Constraint.ON_ANY_NETWORK)
                 .build();
