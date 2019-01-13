@@ -1,6 +1,7 @@
 package com.buntorotandjaja.www.capstoneproject;
 
 import android.os.AsyncTask;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.firebase.jobdispatcher.JobParameters;
@@ -17,6 +18,10 @@ public class SoldJobService extends JobService {
             @Override
             protected void onPostExecute(String s) {
                 jobFinished(job, SellActivity.CHANGE_IMAGE == 1 ? false : true);
+                int imageResource = SellActivity.CHANGE_IMAGE == 1 ? R.drawable.garage_sale_sold
+                        : R.drawable.garage_sale_icon;
+                RemoteViews rv = new RemoteViews(getPackageName(), R.layout.capstone_widget);
+                rv.setImageViewResource(R.id.imageView_capstoneWidget, imageResource);
             }
         };
 
