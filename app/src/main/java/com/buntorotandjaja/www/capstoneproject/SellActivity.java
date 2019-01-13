@@ -305,8 +305,7 @@ public class SellActivity extends AppCompatActivity {
                                 clearInput();
                                 uploadSuccessful();
                                 hideIndicator();
-                                // todo think
-//                                startJob();
+                                startJob();
                             }
                         }
                     })
@@ -324,6 +323,8 @@ public class SellActivity extends AppCompatActivity {
                             Toast.makeText(SellActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                             // TODO hide progress bar
                             hideIndicator();
+                            if (CHANGE_IMAGE == 0) startJob();
+                            else stopJob();
                         }
                     });
         } else {
@@ -399,8 +400,7 @@ public class SellActivity extends AppCompatActivity {
         mItemImage.setImageDrawable(getDrawable(R.drawable.no_image_icon));
         mItemTitle.setText("");
         mItemDescription.setText("");
-        mPrice.clearComposingText();
-//        mPrice.setText("0");
+        mPrice.setText("0");
         mHasImage = false;
         meetPostingRequirement = false;
     }

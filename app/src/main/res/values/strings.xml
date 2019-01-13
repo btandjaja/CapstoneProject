@@ -90,6 +90,7 @@
     <string name="wrong_place_to_update">Please go to \'Your Listing\' to update</string>
     <string name="item_loading">The page is loading, please wait</string>
     <string name="sign_out_complete">You have signed out</string>
+    <string name="no_listing">You do not have any active listing</string>
 
     <string name="log_create_account_successful">createUserWithEmail\:success</string>
 

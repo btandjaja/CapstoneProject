@@ -128,7 +128,7 @@ public class ItemDetailActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                        if (postSnapshot.equals(mLoadedItem.getUploadId())) {
+                        if (postSnapshot.getValue(Upload.class).getUploadId().equals(mLoadedItem.getUploadId())) {
                             if (!postSnapshot.getValue(Upload.class).getSold()) {
                                 mDbRef.child(uploadId).child("buyerUId").setValue(mBuyerUid);
                                 mDbRef.child(uploadId).child("sold").setValue(mSold);

@@ -66,6 +66,9 @@ public class YourListingActivity extends AppCompatActivity implements ItemAdapte
                             mItemList.add(postSnapshot.getValue(Upload.class));
                         }
                     }
+                    if (mItemList.size() == 0) {
+                        Toast.makeText(YourListingActivity.this, getString(R.string.no_listing), Toast.LENGTH_SHORT).show();
+                    }
                 }
 
                 @Override

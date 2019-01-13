@@ -19,7 +19,7 @@ public class CapstoneWidgetProvider extends AppWidgetProvider {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.capstone_widget);
 
-        boolean itemSold = CheckDBListing.getSold(context);
+        boolean itemSold = CheckDBListing.getSold();
 
         // Create intent to launch app when clicked
         Intent intent = new Intent(context, CapstoneWidgetProvider.class);
@@ -29,6 +29,7 @@ public class CapstoneWidgetProvider extends AppWidgetProvider {
         int image = itemSold ? R.drawable.garage_sale_sold : R.drawable.garage_sale_icon;
         // set image accordingly
         views.setImageViewResource(R.id.imageView_capstoneWidget, image);
+        views.setOnClickPendingIntent(R.id.imageView_capstoneWidget, pendingIntent);
         views.setPendingIntentTemplate(appWidgetId, pendingIntent);
 //        views.setOnClickPendingIntent(R.id.imageView_capstoneWidget, pendingIntent);
 
