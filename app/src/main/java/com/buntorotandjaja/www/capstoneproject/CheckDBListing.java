@@ -1,7 +1,5 @@
 package com.buntorotandjaja.www.capstoneproject;
 
-import android.content.Context;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

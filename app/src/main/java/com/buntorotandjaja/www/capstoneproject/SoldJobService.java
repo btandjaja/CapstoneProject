@@ -2,7 +2,6 @@ package com.buntorotandjaja.www.capstoneproject;
 
 import android.os.AsyncTask;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;
