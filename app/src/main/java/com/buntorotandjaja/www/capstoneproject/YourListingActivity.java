@@ -67,7 +67,7 @@ public class YourListingActivity extends AppCompatActivity implements ItemAdapte
                         }
                     }
                     if (mItemList.size() == 0) {
-                        Toast.makeText(YourListingActivity.this, getString(R.string.no_listing), Toast.LENGTH_SHORT).show();
+                        noDataToShow();
                     }
                 }
 
@@ -91,7 +91,7 @@ public class YourListingActivity extends AppCompatActivity implements ItemAdapte
     }
 
     private void noDataToShow() {
-        Toast.makeText(this, "You don't have any listing", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.no_listing), Toast.LENGTH_SHORT).show();
         finish();
     }
 
