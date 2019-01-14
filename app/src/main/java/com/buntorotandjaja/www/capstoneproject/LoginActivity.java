@@ -1,5 +1,6 @@
 package com.buntorotandjaja.www.capstoneproject;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -150,7 +151,13 @@ public class LoginActivity extends AppCompatActivity {
 
     public void register(View view) {
         Intent intent = new Intent(this, RegisterActivity.class);
-        startActivity(intent);
+        // TODO for every page?
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
+            startActivity(intent, bundle);
+        } else {
+            startActivity(intent);
+        }
     }
 
     private void showIndicator() {
