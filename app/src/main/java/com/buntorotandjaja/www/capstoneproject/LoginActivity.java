@@ -35,8 +35,6 @@ public class LoginActivity extends AppCompatActivity {
     // Firebase Authentication
     private FirebaseAuth mAuth;
 
-    private boolean mLoading;
-
     // UI references.
     @BindView(R.id.email) AutoCompleteTextView mEmailView;
     @BindView(R.id.password) EditText mPasswordView;
@@ -55,7 +53,6 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         clearLoginForm();
-        mLoading = false;
         // FirebaseAuth instance
         initializeFirebaseAuth();
 
@@ -163,7 +160,6 @@ public class LoginActivity extends AppCompatActivity {
     private void showIndicator() {
         // TODO show progress bar visibility
         mProgressBarHolder.setVisibility(View.VISIBLE);
-        mLoading = true;
         mEmailView.setFocusableInTouchMode(false);
         mEmailView.setFocusable(false);
         mEmailView.setEnabled(false);
@@ -176,7 +172,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private void hideIndicator() {
         mProgressBarHolder.setVisibility(View.INVISIBLE);
-        mLoading = false;
         mEmailView.setFocusableInTouchMode(true);
         mEmailView.setFocusable(true);
         mEmailView.setEnabled(true);
