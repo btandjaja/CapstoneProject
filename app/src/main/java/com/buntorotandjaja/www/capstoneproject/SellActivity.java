@@ -55,6 +55,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -99,7 +100,6 @@ public class SellActivity extends AppCompatActivity {
         mHasImage = false;
         meetPostingRequirement = false;
         mJobDispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
-        // TODO needed when
         mStorageReference = FirebaseStorage.getInstance().getReference(getString(R.string.app_name));
         mDbRef = FirebaseDatabase.getInstance().getReference(getString(R.string.app_name));
         mUploadPicture.setOnClickListener(new View.OnClickListener() {
@@ -132,10 +132,6 @@ public class SellActivity extends AppCompatActivity {
             }
         });
 
-        // TODO price input convert to currency format
-        mPrice.addTextChangedListener(new DecimalCurrency(mPrice, "#,###"));
-
-        // TODO sell button
         mSell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -264,7 +260,9 @@ public class SellActivity extends AppCompatActivity {
             showIndicator();
             final String title = mItemTitle.getText().toString().trim();
             final String description = mItemDescription.getText().toString().trim();
-            final String price = mPrice.getText().toString().trim();
+            double priceDouble = Double.valueOf(mPrice.getText().toString().trim());
+            DecimalFormat df = new DecimalFormat("#.00");
+            final String price = df.format(priceDouble);
             // TODO firebaseStorage
             final String uploadInfo = FirebaseAuth.getInstance().getUid() + "_"
                     + title + "_"
@@ -400,7 +398,7 @@ public class SellActivity extends AppCompatActivity {
         mItemImage.setImageDrawable(getDrawable(R.drawable.no_image_icon));
         mItemTitle.setText("");
         mItemDescription.setText("");
-        mPrice.setText("0");
+        mPrice.setText("");
         mHasImage = false;
         meetPostingRequirement = false;
     }

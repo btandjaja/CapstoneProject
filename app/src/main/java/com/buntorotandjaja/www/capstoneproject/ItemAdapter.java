@@ -39,11 +39,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
     public void onBindViewHolder(@NonNull ItemViewHolder itemView, int position) {
         Upload singleItem = mItemList.get(position);
         if (singleItem == null) return;
-        // TODO need to fix
         Uri imageUri = Uri.parse(singleItem.getImageUrl());
         Picasso.get().load(imageUri).fit().centerCrop().into(itemView.mImageView);
         itemView.mItemTitle.setText(singleItem.getTitle());
-        itemView.mItemPrice.setText(singleItem.getPrice());
+        itemView.mItemPrice.setText(mContext.getString(R.string.dollar_sign) + singleItem.getPrice());
         int color = singleItem.getSold() ? mContext.getResources().getColor(R.color.background_sold) :
                 mContext.getResources().getColor(R.color.background_available);
         String itemAvailability = singleItem.getSold() ? mContext.getString(R.string.item_sold) :
@@ -78,7 +77,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            // TODO onclicklistener not working
             itemView.setOnClickListener(this);
         }
 

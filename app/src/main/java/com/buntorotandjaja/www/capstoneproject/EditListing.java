@@ -46,8 +46,10 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class EditListing extends AppCompatActivity {
 
@@ -70,8 +72,10 @@ public class EditListing extends AppCompatActivity {
     private Upload mLoadedItem;
     private String mCurrentPhotoPath;
     private Uri mImageUri;
+    private boolean mSold;
     private boolean mHasImage;
     private boolean meetPostingRequirement;
+    private boolean mImageChange;
 
     private DatabaseReference mDbRef;
     private StorageReference mStorageRef;
@@ -116,9 +120,6 @@ public class EditListing extends AppCompatActivity {
             }
         });
 
-        // TODO price input convert to currency format
-        mPrice.addTextChangedListener(new DecimalCurrency(mPrice, "#,###"));
-
         mTakePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,8 +144,10 @@ public class EditListing extends AppCompatActivity {
                 if (mUploadTask != null && mUploadTask.isInProgress()) {
                     uploadingInProgress();
                 } else {
-                    if (meetPostingRequirement) {
+                    if (meetPostingRequirement && !mSold) {
                         uploadFile();
+                    } else {
+                        itemAlreadySold();
                     }
                 }
             }
@@ -165,6 +168,8 @@ public class EditListing extends AppCompatActivity {
     }
 
     private void fillData() {
+        mImageChange = false;
+        mSold = mLoadedItem.getSold();
         String title = mLoadedItem.getTitle();
         String description = mLoadedItem.getDescription();
         String price = mLoadedItem.getPrice();
@@ -252,71 +257,100 @@ public class EditListing extends AppCompatActivity {
     // upload to firebaseDatabase and firebaseStorage (image)
     private void uploadFile() {
         if (mImageUri != null) {
-            showIndicator();
-            final String title = mTitle.getText().toString().trim();
-            final String description = mDescription.getText().toString().trim();
-            final String price = mPrice.getText().toString().trim();
-            String extension = "";
-            if (mImageUri.toString().contains("http")) {
-                extension = mImageUri.toString().split("[?]")[0];
-            } else {
-                extension = getFileExtension(mImageUri);
+            if (mImageChange) {
+                showIndicator();
+                final String title = mTitle.getText().toString().trim();
+                final String uploadInfo = FirebaseAuth.getInstance().getUid() + "_"
+                        + title + "_"
+                        + System.currentTimeMillis()
+                        + "." + getFileExtension(mImageUri);
+                final StorageReference fileReference = mStorageRef.child(uploadInfo);
+
+                mUploadTask = fileReference.putFile(mImageUri)
+                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mProgressBarItemUploading.setProgress(0);
+                                    }
+                                }, 500);
+
+                                Task<Uri> imageUri = taskSnapshot.getStorage().getDownloadUrl();
+                                while (!imageUri.isComplete()) ;
+                                updateItem();
+                                mLoadedItem.setUploadInfo(uploadInfo);
+                                mLoadedItem.setImageUrl(imageUri.getResult().toString());
+
+                                String uploadId = mLoadedItem.getUploadId();
+                                mDbRef.child(uploadId).setValue(mLoadedItem);
+                                uploadSuccessful();
+                                hideIndicator();
+                                finish();
+                            }
+                        })
+                        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                                mProgressBarItemUploading.setProgress((int) progress);
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                hideIndicator();
+                                Toast.makeText(EditListing.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .addOnCanceledListener(new OnCanceledListener() {
+                            @Override
+                            public void onCanceled() {
+                                cancelUploadingPicture();
+                            }
+                        });
+            } else if (!mImageChange && dataChange()) {
+                updateItem();
+                String[] uploadInfoArr = mLoadedItem.getUploadInfo().split("_");
+                String uploadInfo = uploadInfoArr[0] + "_" +
+                        uploadInfoArr[1] + "_" + System.currentTimeMillis();
+                mLoadedItem.setUploadInfo(uploadInfo);
+                mDbRef.child(mLoadedItem.getUploadId()).setValue(mLoadedItem);
+                uploadSuccessful();
+                finish();
             }
-            final String uploadInfo = FirebaseAuth.getInstance().getUid() + "_"
-                    + title + "_"
-                    + System.currentTimeMillis()
-                    + "." + extension ;
-            final StorageReference fileReference = mStorageRef.child(uploadInfo);
-
-            mUploadTask = fileReference.putFile(mImageUri)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    mProgressBarItemUploading.setProgress(0);
-                                }
-                            }, 500);
-
-                            Task<Uri> imageUri = taskSnapshot.getStorage().getDownloadUrl();
-                            while (!imageUri.isComplete()) ;
-
-                            mLoadedItem.setUploadInfo(uploadInfo);
-                            mLoadedItem.setImageUrl(imageUri.getResult().toString());
-                            mLoadedItem.setTitle(title);
-                            mLoadedItem.setDescription(description);
-                            mLoadedItem.setPrice(price);
-                            String uploadId = mLoadedItem.getUploadId();
-                            mDbRef.child(uploadId).setValue(mLoadedItem);
-                            uploadSuccessful();
-                            hideIndicator();
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                            mProgressBarItemUploading.setProgress((int) progress);
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            hideIndicator();
-                            Toast.makeText(EditListing.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnCanceledListener(new OnCanceledListener() {
-                        @Override
-                        public void onCanceled() {
-                            cancelUploadingPicture();
-                        }
-                    });
         } else {
             noImageSelected();
         }
+    }
+
+    private void updateItem() {
+        final String title = mTitle.getText().toString().trim();
+        final String description = mDescription.getText().toString().trim();
+        final String price = getPriceCurrencyFormat();
+        mLoadedItem.setTitle(title);
+        mLoadedItem.setDescription(description);
+        mLoadedItem.setPrice(price);
+    }
+
+    private boolean dataChange() {
+        final String price = getPriceCurrencyFormat();
+        if (!mLoadedItem.getPrice().equals(price)) {
+            return true;
+        } else if (!mLoadedItem.getDescription().equals(mDescription.getText().toString().trim())) {
+            return true;
+        } else if (!mLoadedItem.getTitle().equals(mTitle.getText().toString().trim())) {
+            return true;
+        }
+        return false;
+    }
+
+    private String getPriceCurrencyFormat() {
+        double priceDouble = Double.valueOf(mPrice.getText().toString().trim());
+        DecimalFormat df = new DecimalFormat("#.00");
+        return df.format(priceDouble);
     }
 
     @Override
@@ -330,6 +364,7 @@ public class EditListing extends AppCompatActivity {
                 mImageUri = data.getData();
                 Picasso.get().load(mImageUri).fit().centerCrop().into(mItemImage);
                 meetPostingRequirement = true;
+                mImageChange = true;
             } else {
                 meetPostingRequirement = false;
                 operationCancelled();
@@ -338,6 +373,7 @@ public class EditListing extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 mHasImage = true;
                 mItemImage.setImageURI(Uri.parse(mCurrentPhotoPath));
+                mImageChange = true;
             } else if (resultCode == RESULT_CANCELED) {
                 operationCancelled();
                 meetPostingRequirement = false;
@@ -379,7 +415,7 @@ public class EditListing extends AppCompatActivity {
             uploadingInProgress();
             return false;
         }
-        onBackPressed();
+        if (keyCode == KeyEvent.ACTION_UP) onBackPressed();
         return true;
     }
 
@@ -415,6 +451,10 @@ public class EditListing extends AppCompatActivity {
 
     private void operationCancelled() {
         showToast(R.string.camera_operation_cancelled);
+    }
+
+    private void itemAlreadySold() {
+        showToast(R.string.error_item_sold);
     }
 
     private void showToast(int stringInt) {

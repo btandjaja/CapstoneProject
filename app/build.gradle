@@ -20,7 +20,7 @@ android {
         config {
             keyAlias 'capstoneProject'
             keyPassword 'Capstone123!'
-            storeFile file('/Users/crowduckseq/Downloads/google_android_development/CapstoneProject/keystore')
+            storeFile file('CapstoneProject/app')
             storePassword 'Capstone123!'
         }
     }
