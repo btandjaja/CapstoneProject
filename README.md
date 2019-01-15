@@ -1,1 +1,1 @@
-# CapstoneProject
+# Garage Sale (Capstone)
